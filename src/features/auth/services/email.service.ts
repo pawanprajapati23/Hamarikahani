@@ -1,5 +1,7 @@
 import { resend } from "@/lib/resend";
 
+import { env } from "@/config/env";
+
 export class EmailService {
   /**
    * Fires a transactional welcome email via Resend when a user signs up.
@@ -7,7 +9,7 @@ export class EmailService {
   static async sendWelcomeEmail(email: string, name: string) {
     try {
       await resend.emails.send({
-        from: "HamariKahani <noreply@hamarikahani.in>",
+        from: env.RESEND_FROM_EMAIL || "HamariKahani <support@hamarikahani.in>",
         to: email,
         subject: "Welcome to HamariKahani ✨",
         html: `
