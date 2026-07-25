@@ -29,10 +29,18 @@ export function SignupForm() {
 
   const onSubmit = async (data: SignupValues) => {
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      toast.success("Account created successfully!");
-    } catch (error) {
-      toast.error("Failed to create account");
+      const { signUpWithEmail } = await import("../api/actions");
+      const res = await signUpWithEmail(data.email, data.password, data.fullName);
+      
+      if (res.error) {
+        toast.error(res.error);
+        return;
+      }
+      
+      toast.success("Account created! Please check your email to verify.");
+      window.location.href = "/dashboard"; // Note: Might redirect back to login if email confirmation is required by Supabase
+    } catch (error: any) {
+      toast.error(error.message || "Failed to create account");
     }
   };
 

@@ -7,13 +7,11 @@ import { EmailService } from "../services/email.service";
 
 const getSiteUrl = () => process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
-export async function signInWithEmail(email: string, redirectTo: string) {
+export async function signInWithEmail(email: string, password: string, redirectTo: string) {
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithOtp({
+  const { error } = await supabase.auth.signInWithPassword({
     email,
-    options: {
-      emailRedirectTo: `${getSiteUrl()}/auth/callback?redirect_to=${redirectTo}`,
-    },
+    password,
   });
 
   if (error) return { success: false, error: error.message };

@@ -28,11 +28,18 @@ export function LoginForm() {
 
   const onSubmit = async (data: LoginValues) => {
     try {
-      // Intentionally omitting real auth logic per instructions
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const { signInWithEmail } = await import("../api/actions");
+      const res = await signInWithEmail(data.email, data.password, "/dashboard");
+      
+      if (res.error) {
+        toast.error(res.error);
+        return;
+      }
+      
       toast.success("Successfully logged in!");
-    } catch (error) {
-      toast.error("Invalid email or password");
+      window.location.href = "/dashboard";
+    } catch (error: any) {
+      toast.error(error.message || "Invalid email or password");
     }
   };
 
