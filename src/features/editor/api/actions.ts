@@ -15,18 +15,27 @@ export async function saveStoryDraft(data: {
   try {
     const user = await requireAuth();
 
-    // Since we are building the Editor Foundation, we mock the final DB insert
-    // to prevent Foreign Key constraints from failing (since the 'themes' table is unseeded).
-    // In production, this will utilize standard db.insert/db.update via Drizzle.
-
     console.log("[Editor API] Saving draft for user:", user.auth.id, data);
+    
+    // Fallback theme ID if empty (from our seeder)
+    const activeThemeId = data.themeId || "683c7554-313c-41c5-8851-339ff9d35643";
 
-    if (data.storyId) {
-      // Mock Update
+    if (data.storyId && data.storyId !== "mock-story-id-123") {
+      await db.update(stories).set({
+        theme_id: activeThemeId,
+        content: { title: data.title, blocks: data.blocks },
+        updated_at: new Date()
+      }).where(eq(stories.id, data.storyId));
       return { success: true, id: data.storyId };
     } else {
-      // Mock Insert
-      return { success: true, id: "mock-story-id-123" };
+      const inserted = await db.insert(stories).values({
+        user_id: user.auth.id,
+        theme_id: activeThemeId,
+        status: "DRAFT",
+        content: { title: data.title, blocks: data.blocks }
+      }).returning({ id: stories.id });
+      
+      return { success: true, id: inserted[0].id };
     }
   } catch (error: any) {
     console.error(error);
@@ -37,15 +46,13 @@ export async function saveStoryDraft(data: {
 export async function publishStory(storyId: string | null, slug: string) {
   try {
     const user = await requireAuth();
-    if (!storyId) return { success: false, error: "Story ID missing" };
+    if (!storyId || storyId === "mock-story-id-123") return { success: false, error: "Story ID missing or invalid" };
 
     console.log("[Payment/Publish API] Verifying payment and publishing for user:", user.auth.id, slug);
 
-    // MOCK Payment verification occurs here. If valid:
-    // Update story in postgres to PUBLISHED and assign unique slug
-    
-    // In actual production (where themes are seeded), we would run:
-    // await db.update(stories).set({ status: "PUBLISHED", slug }).where(eq(stories.id, storyId));
+    await db.update(stories)
+      .set({ status: "PUBLISHED", slug, updated_at: new Date() })
+      .where(eq(stories.id, storyId));
     
     return { success: true };
   } catch (error: any) {
