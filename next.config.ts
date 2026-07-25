@@ -1,5 +1,10 @@
 import type { NextConfig } from "next";
 
+// Prevent Cloudinary SDK from crashing during build if Vercel injects a bad CLOUDINARY_URL
+if (process.env.CLOUDINARY_URL && !process.env.CLOUDINARY_URL.startsWith('cloudinary://')) {
+  delete process.env.CLOUDINARY_URL;
+}
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   images: {

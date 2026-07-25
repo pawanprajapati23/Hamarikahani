@@ -1,16 +1,10 @@
 import { requireAdmin } from "@/features/auth/utils/server-auth";
-import { v2 as cloudinary } from "cloudinary";
+
 import { Search, Image as ImageIcon, Trash2, DownloadCloud, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 
-// Configure Cloudinary using env vars
-cloudinary.config({ 
-  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME, 
-  api_key: process.env.CLOUDINARY_API_KEY, 
-  api_secret: process.env.CLOUDINARY_API_SECRET 
-});
 
 export default async function AdminMediaPage() {
   await requireAdmin(true);
@@ -22,6 +16,16 @@ export default async function AdminMediaPage() {
     if (!process.env.CLOUDINARY_API_SECRET) {
       throw new Error("Missing CLOUDINARY_API_SECRET in environment variables");
     }
+
+    // Dynamically import cloudinary to prevent Vercel build-time initialization crashes if user sets a bad CLOUDINARY_URL
+    const { v2: cloudinary } = await import("cloudinary");
+
+    // Configure Cloudinary using env vars inside function to prevent build-time evaluation errors
+    cloudinary.config({ 
+      cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME, 
+      api_key: process.env.CLOUDINARY_API_KEY, 
+      api_secret: process.env.CLOUDINARY_API_SECRET 
+    });
 
     // Fetch the latest 50 images from Cloudinary
     const result = await cloudinary.search
