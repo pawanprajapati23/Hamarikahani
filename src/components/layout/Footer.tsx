@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Sparkles } from "lucide-react";
+import Image from "next/image";
 import { Container } from "./Container";
 
 export function Footer() {
@@ -8,7 +8,7 @@ export function Footer() {
       <Container>
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-primary" aria-hidden="true" />
+            <Image src="/logo.png" alt="HamariKahani Logo" width={28} height={28} className="rounded-md opacity-80 hover:opacity-100 transition-opacity" />
             <span className="font-playfair font-bold text-xl tracking-tight text-foreground">HamariKahani</span>
           </div>
           

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Sparkles } from "lucide-react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Container } from "./Container";
 
@@ -10,7 +10,7 @@ export function Navbar() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 transition-transform hover:scale-105 active:scale-95" aria-label="HamariKahani Home">
-            <Sparkles className="w-5 h-5 text-primary" aria-hidden="true" />
+            <Image src="/logo.png" alt="HamariKahani Logo" width={28} height={28} className="rounded-md" />
             <span className="font-playfair font-bold text-xl tracking-tight text-foreground">HamariKahani</span>
           </Link>
           
