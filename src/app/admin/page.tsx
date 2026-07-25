@@ -1,19 +1,11 @@
-import { requireAuth } from "@/features/auth/utils/server-auth";
-import { redirect } from "next/navigation";
+import { requireAdmin } from "@/features/auth/utils/server-auth";
 import { db } from "@/db/drizzle";
 import { stories, users } from "@/db/schema";
 import { sql } from "drizzle-orm";
 import { Users, FileText, IndianRupee, ShieldAlert } from "lucide-react";
 
 export default async function AdminDashboard() {
-  const user = await requireAuth();
-  
-  // Basic Security Hardening: Only specific admin emails allowed
-  // In production, this would be an RBAC role on the user table
-  const adminEmails = ["admin@hamarikahani.in", "founder@hamarikahani.in"];
-  if (!user.auth.email || !adminEmails.includes(user.auth.email)) {
-    redirect("/dashboard");
-  }
+  const user = await requireAdmin();
 
   // Fast Aggregate Queries for Admin Metrics
   const [userMetrics] = await db.select({ count: sql<number>`count(*)` }).from(users);

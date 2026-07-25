@@ -56,7 +56,7 @@ export async function verifyPayment(
     if (isAuthentic) {
       // Check if transaction already exists to avoid duplicate processing
       const existingTx = await db.query.transactions.findFirst({
-        where: eq(transactions.razorpay_payment_id, razorpay_payment_id)
+        where: eq(transactions.razorpayPaymentId, razorpay_payment_id)
       });
       
       if (existingTx) {
@@ -65,10 +65,10 @@ export async function verifyPayment(
 
       // Record successful transaction
       await db.insert(transactions).values({
-        user_id: user.auth.id,
-        story_id: storyId,
-        razorpay_order_id: razorpay_order_id,
-        razorpay_payment_id: razorpay_payment_id,
+        userId: user.auth.id,
+        storyId: storyId,
+        razorpayOrderId: razorpay_order_id,
+        razorpayPaymentId: razorpay_payment_id,
         amount: 100, // Hardcoded 1 INR for now
         status: "SUCCESS",
       });
