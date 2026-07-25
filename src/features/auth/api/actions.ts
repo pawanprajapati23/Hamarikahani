@@ -59,10 +59,35 @@ export async function signInWithGoogle(redirectTo: string) {
 export async function requestPasswordReset(email: string) {
   const supabase = await createClient();
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    // We don't necessarily need redirectTo if we are using OTP in the same tab,
+    // but we can keep it as a fallback.
     redirectTo: `${getSiteUrl()}/auth/update-password`,
   });
 
   if (error) return { success: false, error: error.message };
+  return { success: true };
+}
+
+export async function verifyPasswordResetOTP(email: string, token: string, newPassword: string) {
+  const supabase = await createClient();
+  
+  // 1. Verify the recovery OTP
+  const { error: verifyError } = await supabase.auth.verifyOtp({
+    email,
+    token,
+    type: "recovery",
+  });
+
+  if (verifyError) return { success: false, error: verifyError.message || "Invalid or expired OTP." };
+
+  // 2. Update the password
+  const { error: updateError } = await supabase.auth.updateUser({ password: newPassword });
+  
+  if (updateError) return { success: false, error: updateError.message };
+  
+  // 3. Clear session so user can log in with new password explicitly (optional but secure)
+  await supabase.auth.signOut();
+  
   return { success: true };
 }
 
