@@ -14,7 +14,7 @@ import {
   ShieldAlert,
   Image as ImageIcon
 } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { signOutAdmin } from "../api/actions";
 
 const navigation = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
@@ -31,12 +31,6 @@ const navigation = [
 
 export function AdminSidebar() {
   const pathname = usePathname();
-
-  const handleLogout = async () => {
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    window.location.href = "/admin/login";
-  };
 
   return (
     <div className="w-64 bg-slate-900 text-slate-300 flex flex-col shrink-0">
@@ -65,13 +59,15 @@ export function AdminSidebar() {
       </nav>
 
       <div className="p-4 border-t border-slate-800">
-        <button 
-          onClick={handleLogout}
-          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium w-full text-slate-400 hover:bg-slate-800 hover:text-white transition-colors"
-        >
-          <LogOut className="w-5 h-5" />
-          Logout
-        </button>
+        <form action={signOutAdmin}>
+          <button 
+            type="submit"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium w-full text-slate-400 hover:bg-slate-800 hover:text-white transition-colors"
+          >
+            <LogOut className="w-5 h-5" />
+            Logout
+          </button>
+        </form>
       </div>
     </div>
   );

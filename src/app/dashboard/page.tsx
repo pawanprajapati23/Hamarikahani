@@ -1,9 +1,10 @@
 import { requireAuth } from "@/features/auth/utils/server-auth";
+import { signOut } from "@/features/auth/api/actions";
 import { db } from "@/db/drizzle";
 import { stories, StoryContent } from "@/db/schema/stories";
 import { eq, desc, and, isNull } from "drizzle-orm";
 import Link from "next/link";
-import { Plus, Settings, BarChart3, Clock, CheckCircle2, Globe, ArrowRight } from "lucide-react";
+import { Plus, Settings, BarChart3, Clock, CheckCircle2, Globe, ArrowRight, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default async function DashboardPage({ searchParams }: { searchParams: { page?: string } }) {
@@ -56,10 +57,16 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
             <Link href="/dashboard/settings"><Settings className="w-4 h-4 mr-3" /> Settings</Link>
           </Button>
         </nav>
-        
-        <Button className="w-full rounded-full shadow-lg" asChild>
-          <Link href="/create"><Plus className="w-4 h-4 mr-2" /> New Story</Link>
-        </Button>
+        <div className="mt-auto space-y-4">
+          <Button className="w-full rounded-full shadow-lg" asChild>
+            <Link href="/create"><Plus className="w-4 h-4 mr-2" /> New Story</Link>
+          </Button>
+          <form action={signOut}>
+            <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground">
+              <LogOut className="w-4 h-4 mr-3" /> Log out
+            </Button>
+          </form>
+        </div>
       </aside>
 
       {/* Main Content Area */}
