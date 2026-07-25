@@ -54,14 +54,14 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
   return (
     <div className="min-h-screen bg-background flex flex-col md:flex-row">
       {/* Dashboard Sidebar */}
-      <aside className="w-full md:w-64 border-r border-foreground/10 bg-card p-6 flex flex-col gap-8">
+      <aside className="w-full md:w-64 border-r border-border/40 bg-secondary/30 p-6 flex flex-col gap-8">
         <div>
-          <h2 className="text-2xl font-playfair font-bold text-primary mb-1">Dashboard</h2>
-          <p className="text-sm text-muted-foreground truncate">{user.auth.email}</p>
+          <h2 className="text-2xl font-playfair font-bold text-foreground mb-1">Dashboard</h2>
+          <p className="text-sm font-medium text-muted-foreground truncate">{user.auth.email}</p>
         </div>
         
         <nav className="flex flex-col gap-2 flex-grow">
-          <Button variant="secondary" className="justify-start bg-foreground/5" asChild>
+          <Button variant="secondary" className="justify-start bg-background shadow-sm border border-border/40" asChild>
             <Link href="/dashboard"><BarChart3 className="w-4 h-4 mr-3" /> Overview</Link>
           </Button>
           <Button variant="ghost" className="justify-start text-muted-foreground hover:text-foreground" asChild>
@@ -86,23 +86,23 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
           
           {/* Analytics Header */}
           <div>
-            <h1 className="text-3xl font-bold mb-6">Welcome back</h1>
+            <h1 className="text-3xl font-bold mb-8 tracking-tight">Welcome back</h1>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              <div className="bg-card border border-foreground/10 p-6 rounded-2xl shadow-sm">
-                <p className="text-sm text-muted-foreground font-medium mb-2">Total Stories</p>
-                <p className="text-4xl font-bold">{totalStoriesCount}</p>
+              <div className="bg-card border border-border/50 p-6 rounded-3xl shadow-md hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
+                <p className="text-sm text-muted-foreground font-medium mb-2 uppercase tracking-wider">Total Stories</p>
+                <p className="text-4xl font-bold tracking-tight">{totalStoriesCount}</p>
               </div>
-              <div className="bg-card border border-foreground/10 p-6 rounded-2xl shadow-sm">
-                <p className="text-sm text-muted-foreground font-medium mb-2">Published</p>
+              <div className="bg-card border border-border/50 p-6 rounded-3xl shadow-md hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
+                <p className="text-sm text-muted-foreground font-medium mb-2 uppercase tracking-wider">Published</p>
                 <div className="flex items-end gap-2">
-                  <p className="text-4xl font-bold text-emerald-500">{publishedCount}</p>
+                  <p className="text-4xl font-bold tracking-tight text-emerald-500">{publishedCount}</p>
                   <Globe className="w-5 h-5 text-emerald-500 mb-1" />
                 </div>
               </div>
-              <div className="bg-card border border-foreground/10 p-6 rounded-2xl shadow-sm">
-                <p className="text-sm text-muted-foreground font-medium mb-2">Drafts</p>
+              <div className="bg-card border border-border/50 p-6 rounded-3xl shadow-md hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
+                <p className="text-sm text-muted-foreground font-medium mb-2 uppercase tracking-wider">Drafts</p>
                 <div className="flex items-end gap-2">
-                  <p className="text-4xl font-bold text-amber-500">{draftCount}</p>
+                  <p className="text-4xl font-bold tracking-tight text-amber-500">{draftCount}</p>
                   <Clock className="w-5 h-5 text-amber-500 mb-1" />
                 </div>
               </div>
@@ -116,13 +116,13 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
             </div>
             
             {userStories.length === 0 ? (
-              <div className="text-center py-20 bg-card border border-foreground/10 rounded-3xl">
-                <div className="w-16 h-16 bg-foreground/5 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Plus className="w-8 h-8 text-muted-foreground" />
+              <div className="text-center py-24 bg-card border border-border/50 rounded-3xl shadow-lg flex flex-col items-center justify-center">
+                <div className="w-20 h-20 bg-secondary rounded-full flex items-center justify-center mb-6 shadow-inner">
+                  <Plus className="w-10 h-10 text-primary" />
                 </div>
-                <h3 className="text-lg font-semibold mb-2">No stories yet</h3>
-                <p className="text-muted-foreground mb-6">Create your first emotional surprise today.</p>
-                <Button asChild><Link href="/create">Start Creating</Link></Button>
+                <h3 className="text-2xl font-bold mb-2">No stories yet</h3>
+                <p className="text-muted-foreground mb-8 max-w-md">Create your first emotional surprise today. It only takes a few minutes to build something beautiful.</p>
+                <Button asChild className="rounded-full shadow-lg shadow-primary/20"><Link href="/create">Start Creating</Link></Button>
               </div>
             ) : (
               <>
@@ -131,28 +131,28 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
                     const content = story.content as StoryContent;
                     const isPublished = story.status === "PUBLISHED";
                     return (
-                      <div key={story.id} className="group bg-card border border-foreground/10 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col h-full">
-                        <div className="flex justify-between items-start mb-4">
+                      <div key={story.id} className="group bg-card border border-border/50 rounded-3xl p-6 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-full">
+                        <div className="flex justify-between items-start mb-6">
                           <span className={`text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider ${isPublished ? 'bg-emerald-500/10 text-emerald-600' : 'bg-amber-500/10 text-amber-600'}`}>
                             {story.status}
                           </span>
                         </div>
-                        <h3 className="text-xl font-bold font-playfair mb-2 leading-tight">
+                        <h3 className="text-2xl font-bold font-playfair mb-2 leading-tight tracking-tight">
                           {content.title || "Untitled Draft"}
                         </h3>
-                        <p className="text-sm text-muted-foreground mb-6">
+                        <p className="text-sm font-medium text-muted-foreground mb-8">
                           Last updated {new Date(story.updatedAt).toLocaleDateString()}
                         </p>
                         
-                        <div className="mt-auto flex items-center justify-between pt-4 border-t border-foreground/5">
+                        <div className="mt-auto flex items-center justify-between pt-4 border-t border-border/40">
                           {isPublished ? (
-                            <Button variant="ghost" className="text-primary hover:bg-primary/5 px-0 group-hover:px-4 transition-all" asChild>
+                            <Button variant="ghost" className="text-primary hover:bg-primary/5 px-0 group-hover:px-4 transition-all rounded-xl" asChild>
                               <Link href={`/s/${story.slug}`}>
                                 View Live <ArrowRight className="w-4 h-4 ml-2" />
                               </Link>
                             </Button>
                           ) : (
-                            <Button variant="ghost" className="text-foreground hover:bg-foreground/5 px-0 group-hover:px-4 transition-all" asChild>
+                            <Button variant="ghost" className="text-foreground hover:bg-foreground/5 px-0 group-hover:px-4 transition-all rounded-xl" asChild>
                               <Link href={`/create?id=${story.id}`}>
                                 Edit Draft <ArrowRight className="w-4 h-4 ml-2" />
                               </Link>

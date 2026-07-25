@@ -5,13 +5,13 @@ import { Container } from "./Container";
 
 export function Navbar() {
   return (
-    <header className="sticky top-0 w-full border-b border-foreground/5 bg-background/80 backdrop-blur-md z-40 transition-colors">
+    <header className="sticky top-0 w-full border-b border-border/40 bg-background/70 backdrop-blur-xl z-40 transition-colors">
       <Container>
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 transition-transform hover:scale-105 active:scale-95" aria-label="HamariKahani Home">
+          <Link href="/" className="flex items-center gap-2 transition-transform hover:opacity-80 active:scale-95" aria-label="HamariKahani Home">
             <Image src="/logo.png" alt="HamariKahani Logo" width={28} height={28} className="rounded-md" />
-            <span className="font-playfair font-bold text-2xl tracking-tight text-primary">HamariKahani</span>
+            <span className="font-playfair font-bold text-2xl tracking-tight text-foreground">HamariKahani</span>
           </Link>
           
           {/* Navigation Actions */}

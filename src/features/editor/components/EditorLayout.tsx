@@ -60,9 +60,9 @@ export function EditorLayout({ children, sidebar }: { children: ReactNode, sideb
   };
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden bg-foreground/[0.02]">
+    <div className="flex flex-col h-screen overflow-hidden bg-secondary/20">
       {/* Universal Topbar */}
-      <header className="h-16 flex items-center justify-between px-4 sm:px-6 border-b border-foreground/10 bg-background z-20">
+      <header className="h-16 flex items-center justify-between px-4 sm:px-6 border-b border-border/40 bg-background/80 backdrop-blur-xl z-20">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" className="rounded-full" asChild>
             <Link href="/dashboard"><ArrowLeft className="w-5 h-5" /></Link>
@@ -111,7 +111,7 @@ export function EditorLayout({ children, sidebar }: { children: ReactNode, sideb
       <div className="flex flex-1 overflow-hidden relative">
         {step === "CONTENT" && sidebar && (
           <aside className={`
-            absolute lg:relative z-10 w-72 lg:w-80 h-full bg-card border-r border-foreground/10 flex flex-col transition-transform duration-300
+            absolute lg:relative z-10 w-72 lg:w-80 h-full bg-secondary/30 border-r border-border/40 flex flex-col transition-transform duration-300
             ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
           `}>
             {sidebar}

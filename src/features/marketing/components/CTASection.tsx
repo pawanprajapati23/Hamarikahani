@@ -56,7 +56,7 @@ export function CTASection() {
             {/* Primary Button inverted to match the dark section background */}
             <Button 
               size="lg" 
-              className="w-full sm:w-auto rounded-full text-base group bg-background text-foreground hover:bg-background/90 font-semibold" 
+              className="w-full sm:w-auto rounded-full text-base group bg-background text-foreground hover:bg-background/90 shadow-lg shadow-background/20 font-semibold" 
               asChild
             >
               <Link href="/auth/signup">

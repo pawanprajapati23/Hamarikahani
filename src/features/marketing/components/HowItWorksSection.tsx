@@ -76,8 +76,8 @@ export function HowItWorksSection() {
             return (
               <motion.div key={step.id} variants={itemVariants} className="relative z-10">
                 <div className="flex flex-col items-center text-center space-y-4 group">
-                  <div className="w-24 h-24 rounded-full bg-white/60 backdrop-blur-md border border-primary/20 shadow-xl shadow-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white group-hover:scale-110 transition-all duration-300">
-                    <Icon className="w-10 h-10" aria-hidden="true" />
+                  <div className="w-24 h-24 rounded-full bg-card border border-border/50 shadow-md hover:shadow-xl flex items-center justify-center text-primary group-hover:-translate-y-2 group-hover:border-primary/50 transition-all duration-300">
+                    <Icon className="w-10 h-10 group-hover:scale-110 transition-transform duration-300" aria-hidden="true" />
                   </div>
                   <h3 className="font-playfair text-2xl font-bold text-foreground">
                     {step.title}
