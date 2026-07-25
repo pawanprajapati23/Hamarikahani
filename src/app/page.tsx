@@ -8,7 +8,8 @@ import { HowItWorksSection } from "@/features/marketing/components/HowItWorksSec
 import { CategoriesSection } from "@/features/marketing/components/CategoriesSection";
 import { ThemesSection } from "@/features/marketing/components/ThemesSection";
 import { TestimonialsSection } from "@/features/marketing/components/TestimonialsSection";
-import { FAQSection, faqData } from "@/features/marketing/components/FAQSection";
+import { FAQSection } from "@/features/marketing/components/FAQSection";
+import { faqData } from "@/features/marketing/constants/faq";
 import { CTASection } from "@/features/marketing/components/CTASection";
 
 export const metadata: Metadata = {
