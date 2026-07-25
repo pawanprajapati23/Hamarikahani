@@ -30,16 +30,69 @@ export function CheckoutModal({ isOpen, onClose }: { isOpen: boolean, onClose: (
   const handleRazorpayCheckout = async () => {
     setIsProcessing(true);
     
-    // Call the server action to securely transition the draft to a published state
-    const result = await publishStory(storyId, slug);
-    
-    setIsProcessing(false);
-    
-    if (result.success) {
-      setStep("SUCCESS");
-      toast.success("Payment verified! Story Published.");
-    } else {
-      toast.error(result.error || "Failed to publish story");
+    try {
+      const { createOrder, verifyPayment } = await import("../api/actions");
+      const orderRes = await createOrder(100); // Amount in paise (100 = 1 INR)
+      
+      if (!orderRes.success || !orderRes.orderId) {
+        toast.error(orderRes.error || "Failed to create order");
+        setIsProcessing(false);
+        return;
+      }
+
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => {
+        const options = {
+          key: orderRes.keyId,
+          amount: orderRes.amount,
+          currency: "INR",
+          name: "HamariKahani",
+          description: "Premium Story Access",
+          order_id: orderRes.orderId,
+          handler: async function (response: any) {
+            setIsProcessing(true);
+            const verifyRes = await verifyPayment(
+              response.razorpay_order_id,
+              response.razorpay_payment_id,
+              response.razorpay_signature,
+              storyId,
+              slug
+            );
+            if (verifyRes.success) {
+              setStep("SUCCESS");
+              toast.success("Payment verified! Story Published.");
+            } else {
+              toast.error(verifyRes.error || "Verification failed");
+            }
+            setIsProcessing(false);
+          },
+          prefill: {
+            name: "Premium User",
+            email: "user@example.com"
+          },
+          theme: {
+            color: "#3b82f6" // blue-500
+          }
+        };
+        
+        const rzp = new (window as any).Razorpay(options);
+        rzp.on('payment.failed', function (response: any){
+          toast.error("Payment failed. Please try again.");
+        });
+        rzp.open();
+        setIsProcessing(false);
+      };
+      
+      script.onerror = () => {
+        toast.error("Failed to load Razorpay SDK. Check your internet connection.");
+        setIsProcessing(false);
+      };
+      
+      document.body.appendChild(script);
+    } catch (error) {
+      toast.error("Something went wrong");
+      setIsProcessing(false);
     }
   };
 
@@ -99,7 +152,7 @@ export function CheckoutModal({ isOpen, onClose }: { isOpen: boolean, onClose: (
                   <h4 className="font-semibold text-foreground">Lifetime Hosting</h4>
                   <p className="text-sm text-muted-foreground">Premium Story Access</p>
                 </div>
-                <div className="text-xl font-bold text-foreground">₹499</div>
+                <div className="text-xl font-bold text-foreground">₹1</div>
               </div>
               
               <div className="flex items-center gap-2 text-xs text-muted-foreground justify-center">
@@ -112,7 +165,7 @@ export function CheckoutModal({ isOpen, onClose }: { isOpen: boolean, onClose: (
                   <Loader2 className="w-5 h-5 animate-spin" />
                 ) : (
                   <>
-                    <CreditCard className="w-5 h-5 mr-2" /> Pay ₹499 & Publish
+                    <CreditCard className="w-5 h-5 mr-2" /> Pay ₹1 & Publish
                   </>
                 )}
               </Button>
