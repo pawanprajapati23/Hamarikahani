@@ -3,14 +3,17 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ScrollProgress } from "@/components/ui/ScrollProgress";
 import { BackToTop } from "@/components/ui/BackToTop";
+import dynamic from "next/dynamic";
 import { HeroSection } from "@/features/marketing/components/HeroSection";
 import { HowItWorksSection } from "@/features/marketing/components/HowItWorksSection";
 import { CategoriesSection } from "@/features/marketing/components/CategoriesSection";
-import { ThemesSection } from "@/features/marketing/components/ThemesSection";
-import { TestimonialsSection } from "@/features/marketing/components/TestimonialsSection";
-import { FAQSection } from "@/features/marketing/components/FAQSection";
 import { faqData } from "@/features/marketing/constants/faq";
-import { CTASection } from "@/features/marketing/components/CTASection";
+
+// Lazy load below-the-fold components to reduce initial JS bundle size
+const ThemesSection = dynamic(() => import("@/features/marketing/components/ThemesSection").then(mod => mod.ThemesSection));
+const TestimonialsSection = dynamic(() => import("@/features/marketing/components/TestimonialsSection").then(mod => mod.TestimonialsSection));
+const FAQSection = dynamic(() => import("@/features/marketing/components/FAQSection").then(mod => mod.FAQSection));
+const CTASection = dynamic(() => import("@/features/marketing/components/CTASection").then(mod => mod.CTASection));
 
 export const metadata: Metadata = {
   title: "HamariKahani - Premium Digital Storytelling",

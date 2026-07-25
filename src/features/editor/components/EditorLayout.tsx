@@ -46,9 +46,15 @@ export function EditorLayout({ children, sidebar }: { children: ReactNode, sideb
     return () => clearTimeout(autoSaveTimer);
   }, [hasUnsavedChanges, category, themeId, title, blocks, storyId, setHasUnsavedChanges, setLastSavedAt, setStoryId]);
 
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => {
+    const interval = setInterval(() => setNow(Date.now()), 60000);
+    return () => clearInterval(interval);
+  }, []);
+
   const formatSaveTime = (time: number | null) => {
     if (!time) return "";
-    const diff = Math.floor((Date.now() - time) / 1000);
+    const diff = Math.floor((now - time) / 1000);
     if (diff < 60) return "Saved just now";
     return `Saved ${Math.floor(diff / 60)}m ago`;
   };
