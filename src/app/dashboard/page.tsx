@@ -1,7 +1,7 @@
 import { requireAuth } from "@/features/auth/utils/server-auth";
 import { db } from "@/db/drizzle";
-import { stories } from "@/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { stories, StoryContent } from "@/db/schema/stories";
+import { eq, desc, and, isNull } from "drizzle-orm";
 import Link from "next/link";
 import { Plus, Settings, BarChart3, Clock, CheckCircle2, Globe, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,14 +15,24 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
 
   // Fetch paginated stories
   const userStories = await db.select().from(stories)
-    .where(eq(stories.userId, user.auth.id))
+    .where(
+      and(
+        eq(stories.userId, user.auth.id),
+        isNull(stories.deletedAt)
+      )
+    )
     .orderBy(desc(stories.createdAt))
     .limit(pageSize)
     .offset(offset);
 
   // Fetch total counts for metrics and pagination
   const allStories = await db.select({ id: stories.id, status: stories.status }).from(stories)
-    .where(eq(stories.userId, user.auth.id));
+    .where(
+      and(
+        eq(stories.userId, user.auth.id),
+        isNull(stories.deletedAt)
+      )
+    );
     
   const totalStoriesCount = allStories.length;
   const totalPages = Math.ceil(totalStoriesCount / pageSize);
@@ -100,7 +110,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {userStories.map(story => {
-                    const content = story.content as any;
+                    const content = story.content as StoryContent;
                     const isPublished = story.status === "PUBLISHED";
                     return (
                       <div key={story.id} className="group bg-card border border-foreground/10 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col h-full">

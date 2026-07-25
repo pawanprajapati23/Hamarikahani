@@ -25,12 +25,39 @@ export function BlockEditorItem({ block, index }: { block: EditorBlock, index: n
   const handleCloudinaryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    toast.info("Uploading to Cloudinary...");
-    setTimeout(() => {
+    
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+    
+    if (!cloudName || !uploadPreset) {
+      toast.error("Cloudinary is not configured. Missing environment variables.");
+      // Fallback for local testing if env is missing
       const url = URL.createObjectURL(file);
       updateBlock(block.id, url);
+      return;
+    }
+
+    toast.info("Uploading securely to Cloud...");
+    
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", uploadPreset);
+
+    try {
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, {
+        method: "POST",
+        body: formData,
+      });
+      
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error?.message || "Upload failed");
+      
+      updateBlock(block.id, data.secure_url);
       toast.success("Media uploaded securely!");
-    }, 1500);
+    } catch (error: any) {
+      console.error("Cloudinary Upload Error:", error);
+      toast.error(error.message || "Failed to upload media.");
+    }
   };
 
   const handleDelete = () => {

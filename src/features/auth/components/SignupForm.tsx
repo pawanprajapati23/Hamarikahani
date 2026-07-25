@@ -37,8 +37,12 @@ export function SignupForm() {
         return;
       }
       
-      toast.success("Account created! Please check your email to verify.");
-      window.location.href = "/dashboard"; // Note: Might redirect back to login if email confirmation is required by Supabase
+      if (res.requiresEmailConfirmation) {
+        toast.success("Account created! Please check your email to verify.");
+      } else {
+        toast.success("Account created successfully!");
+        window.location.href = "/dashboard";
+      }
     } catch (error: any) {
       toast.error(error.message || "Failed to create account");
     }

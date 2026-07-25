@@ -87,7 +87,7 @@ export function CheckoutModal({ isOpen, onClose }: { isOpen: boolean, onClose: (
       };
       
       script.onerror = () => {
-        toast.error("Failed to load Razorpay SDK. Check your internet connection.");
+        toast.error("Failed to load secure checkout. Please check your internet connection or disable ad-blockers, then try again.");
         setIsProcessing(false);
       };
       

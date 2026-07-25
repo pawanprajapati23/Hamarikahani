@@ -36,7 +36,10 @@ export async function signUpWithEmail(email: string, password: string, fullName:
     EmailService.sendWelcomeEmail(email, fullName).catch(console.error);
   }
 
-  return { success: true };
+  return { 
+    success: true, 
+    requiresEmailConfirmation: !data.session 
+  };
 }
 
 export async function signInWithGoogle(redirectTo: string) {
@@ -45,7 +48,7 @@ export async function signInWithGoogle(redirectTo: string) {
     provider: "google",
     options: {
       redirectTo: `${getSiteUrl()}/auth/callback?redirect_to=${redirectTo}`,
-      queryParams: { access_type: 'offline', prompt: 'consent' }
+      queryParams: { access_type: 'offline' }
     },
   });
 
