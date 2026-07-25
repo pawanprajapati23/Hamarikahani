@@ -8,13 +8,14 @@ import { publishStory } from "@/features/editor/api/actions";
 import { db } from "@/db/drizzle";
 import { transactions } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { PRICING } from "@/config/pricing";
 
-export async function createOrder(amount: number = 100) {
+export async function createOrder() {
   try {
     const user = await requireAuth();
 
     const options = {
-      amount: amount, 
+      amount: PRICING.STORY_PUBLISH_INR_PAISE, 
       currency: "INR",
       receipt: `rcpt_${Date.now()}`
     };
@@ -69,7 +70,7 @@ export async function verifyPayment(
         storyId: storyId,
         razorpayOrderId: razorpay_order_id,
         razorpayPaymentId: razorpay_payment_id,
-        amount: 100, // Hardcoded 1 INR for now
+        amount: PRICING.STORY_PUBLISH_INR_PAISE,
         status: "SUCCESS",
       });
 

@@ -24,15 +24,26 @@ export class AuthService {
     if (!session?.user) return null;
 
     // Fetch the extended user profile (roles, full name, etc.) from Drizzle
-    const [dbUser] = await db
+    let [dbUser] = await db
       .select()
       .from(users)
       .where(eq(users.id, session.user.id))
       .limit(1);
 
+    if (!dbUser && session.user.email) {
+      // Fix race condition: Insert profile directly if Supabase trigger hasn't fired yet
+      const [newUser] = await db.insert(users).values({
+        id: session.user.id,
+        email: session.user.email,
+        fullName: session.user.user_metadata?.full_name || null,
+        avatarUrl: session.user.user_metadata?.avatar_url || null,
+      }).returning();
+      dbUser = newUser;
+    }
+
     return {
       auth: session.user,
-      profile: dbUser || null, // Will be populated by Supabase trigger on first login
+      profile: dbUser,
     };
   }
 }

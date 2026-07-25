@@ -6,17 +6,28 @@ import Link from "next/link";
 import { Plus, Settings, BarChart3, Clock, CheckCircle2, Globe, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export default async function DashboardPage() {
+export default async function DashboardPage({ searchParams }: { searchParams: { page?: string } }) {
   const user = await requireAuth();
+  
+  const page = Number(searchParams.page) || 1;
+  const pageSize = 9;
+  const offset = (page - 1) * pageSize;
 
-  // Fetch all user stories securely matching their userId
+  // Fetch paginated stories
   const userStories = await db.select().from(stories)
     .where(eq(stories.userId, user.auth.id))
     .orderBy(desc(stories.createdAt))
-    .limit(10); // Simple pagination mock
+    .limit(pageSize)
+    .offset(offset);
 
-  const draftCount = userStories.filter(s => s.status === "DRAFT").length;
-  const publishedCount = userStories.filter(s => s.status === "PUBLISHED").length;
+  // Fetch total counts for metrics and pagination
+  const allStories = await db.select({ id: stories.id, status: stories.status }).from(stories)
+    .where(eq(stories.userId, user.auth.id));
+    
+  const totalStoriesCount = allStories.length;
+  const totalPages = Math.ceil(totalStoriesCount / pageSize);
+  const draftCount = allStories.filter(s => s.status === "DRAFT").length;
+  const publishedCount = allStories.filter(s => s.status === "PUBLISHED").length;
 
   return (
     <div className="min-h-screen bg-background flex flex-col md:flex-row">
@@ -51,7 +62,7 @@ export default async function DashboardPage() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               <div className="bg-card border border-foreground/10 p-6 rounded-2xl shadow-sm">
                 <p className="text-sm text-muted-foreground font-medium mb-2">Total Stories</p>
-                <p className="text-4xl font-bold">{userStories.length}</p>
+                <p className="text-4xl font-bold">{totalStoriesCount}</p>
               </div>
               <div className="bg-card border border-foreground/10 p-6 rounded-2xl shadow-sm">
                 <p className="text-sm text-muted-foreground font-medium mb-2">Published</p>
@@ -86,43 +97,59 @@ export default async function DashboardPage() {
                 <Button asChild><Link href="/create">Start Creating</Link></Button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {userStories.map(story => {
-                  const content = story.content as any;
-                  const isPublished = story.status === "PUBLISHED";
-                  return (
-                    <div key={story.id} className="group bg-card border border-foreground/10 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col h-full">
-                      <div className="flex justify-between items-start mb-4">
-                        <span className={`text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider ${isPublished ? 'bg-emerald-500/10 text-emerald-600' : 'bg-amber-500/10 text-amber-600'}`}>
-                          {story.status}
-                        </span>
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {userStories.map(story => {
+                    const content = story.content as any;
+                    const isPublished = story.status === "PUBLISHED";
+                    return (
+                      <div key={story.id} className="group bg-card border border-foreground/10 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col h-full">
+                        <div className="flex justify-between items-start mb-4">
+                          <span className={`text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider ${isPublished ? 'bg-emerald-500/10 text-emerald-600' : 'bg-amber-500/10 text-amber-600'}`}>
+                            {story.status}
+                          </span>
+                        </div>
+                        <h3 className="text-xl font-bold font-playfair mb-2 leading-tight">
+                          {content.title || "Untitled Draft"}
+                        </h3>
+                        <p className="text-sm text-muted-foreground mb-6">
+                          Last updated {new Date(story.updatedAt).toLocaleDateString()}
+                        </p>
+                        
+                        <div className="mt-auto flex items-center justify-between pt-4 border-t border-foreground/5">
+                          {isPublished ? (
+                            <Button variant="ghost" className="text-primary hover:bg-primary/5 px-0 group-hover:px-4 transition-all" asChild>
+                              <Link href={`/s/${story.slug}`}>
+                                View Live <ArrowRight className="w-4 h-4 ml-2" />
+                              </Link>
+                            </Button>
+                          ) : (
+                            <Button variant="ghost" className="text-foreground hover:bg-foreground/5 px-0 group-hover:px-4 transition-all" asChild>
+                              <Link href={`/create?id=${story.id}`}>
+                                Edit Draft <ArrowRight className="w-4 h-4 ml-2" />
+                              </Link>
+                            </Button>
+                          )}
+                        </div>
                       </div>
-                      <h3 className="text-xl font-bold font-playfair mb-2 leading-tight">
-                        {content.title || "Untitled Draft"}
-                      </h3>
-                      <p className="text-sm text-muted-foreground mb-6">
-                        Last updated {new Date(story.updatedAt).toLocaleDateString()}
-                      </p>
-                      
-                      <div className="mt-auto flex items-center justify-between pt-4 border-t border-foreground/5">
-                        {isPublished ? (
-                          <Button variant="ghost" className="text-primary hover:bg-primary/5 px-0 group-hover:px-4 transition-all" asChild>
-                            <Link href={`/s/${story.slug}`}>
-                              View Live <ArrowRight className="w-4 h-4 ml-2" />
-                            </Link>
-                          </Button>
-                        ) : (
-                          <Button variant="ghost" className="text-foreground hover:bg-foreground/5 px-0 group-hover:px-4 transition-all" asChild>
-                            <Link href={`/create?id=${story.id}`}>
-                              Edit Draft <ArrowRight className="w-4 h-4 ml-2" />
-                            </Link>
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+                    );
+                  })}
+                </div>
+
+                {totalPages > 1 && (
+                  <div className="flex items-center justify-center gap-4 mt-8">
+                    <Button variant="outline" disabled={page <= 1} asChild={page > 1}>
+                      {page > 1 ? <Link href={`/dashboard?page=${page - 1}`}>Previous</Link> : <span>Previous</span>}
+                    </Button>
+                    <span className="text-sm text-muted-foreground">
+                      Page {page} of {totalPages}
+                    </span>
+                    <Button variant="outline" disabled={page >= totalPages} asChild={page < totalPages}>
+                      {page < totalPages ? <Link href={`/dashboard?page=${page + 1}`}>Next</Link> : <span>Next</span>}
+                    </Button>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>
