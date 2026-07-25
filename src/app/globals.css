@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 36 33% 97%; /* Alabaster */
+    --foreground: 222.2 84% 4.9%; /* Slate 900 */
+    --primary: 350 80% 85%; /* Rose Quartz */
+    --primary-foreground: 350 20% 20%;
+    --secondary: 45 90% 80%; /* Champagne Gold */
+    --secondary-foreground: 45 20% 20%;
+    --accent: 220 50% 20%; /* Midnight Blue */
+    --accent-foreground: 210 40% 98%;
+    --success: 120 40% 60%; /* Sage Green */
+    --error: 10 70% 60%; /* Terracotta Red */
+    --warning: 35 90% 60%; /* Amber */
+    
+    --radius: 0.75rem; /* 12px */
+  }
+
+  .dark {
+    --background: 220 50% 10%; /* Deep Midnight Blue */
+    --foreground: 210 40% 98%; /* Off-white */
+    --primary: 350 80% 85%;
+    --primary-foreground: 350 20% 20%;
+    /* other dark vars */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-[hsl(var(--foreground)/0.1)];
+  }
+  body {
+    @apply bg-background text-foreground antialiased min-h-screen pb-[env(safe-area-inset-bottom)] pt-[env(safe-area-inset-top)];
+  }
+}
+
+.mb-safe {
+  margin-bottom: env(safe-area-inset-bottom);
+}

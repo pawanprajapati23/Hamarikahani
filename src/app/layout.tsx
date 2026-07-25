@@ -1,0 +1,50 @@
+import type { Metadata, Viewport } from "next";
+import { Inter, Playfair_Display } from "next/font/google";
+import { AppProvider } from "@/providers/app-provider";
+import "./globals.css";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f8f7f5" },
+    { media: "(prefers-color-scheme: dark)", color: "#0d1b2a" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
+};
+
+export const metadata: Metadata = {
+  title: {
+    template: "%s | HamariKahani",
+    default: "HamariKahani - Premium Digital Storytelling",
+  },
+  description: "Create beautiful, personalized surprise pages for your loved ones.",
+  openGraph: {
+    type: "website",
+    locale: "en_IN",
+    url: "https://hamarikahani.in",
+    siteName: "HamariKahani",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "HamariKahani - Premium Digital Storytelling",
+    description: "Create beautiful, personalized surprise pages for your loved ones.",
+  },
+  metadataBase: new URL("https://hamarikahani.in"),
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${playfair.variable}`}>
+      <body className="min-h-screen bg-background font-sans antialiased">
+        <AppProvider>{children}</AppProvider>
+      </body>
+    </html>
+  );
+}
