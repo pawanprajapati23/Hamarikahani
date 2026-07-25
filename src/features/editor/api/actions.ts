@@ -22,15 +22,15 @@ export async function saveStoryDraft(data: {
 
     if (data.storyId && data.storyId !== "mock-story-id-123") {
       await db.update(stories).set({
-        theme_id: activeThemeId,
+        themeId: activeThemeId,
         content: { title: data.title, blocks: data.blocks },
-        updated_at: new Date()
+        updatedAt: new Date().toISOString()
       }).where(eq(stories.id, data.storyId));
       return { success: true, id: data.storyId };
     } else {
       const inserted = await db.insert(stories).values({
-        user_id: user.auth.id,
-        theme_id: activeThemeId,
+        userId: user.auth.id,
+        themeId: activeThemeId,
         status: "DRAFT",
         content: { title: data.title, blocks: data.blocks }
       }).returning({ id: stories.id });
@@ -51,7 +51,7 @@ export async function publishStory(storyId: string | null, slug: string) {
     console.log("[Payment/Publish API] Verifying payment and publishing for user:", user.auth.id, slug);
 
     await db.update(stories)
-      .set({ status: "PUBLISHED", slug, updated_at: new Date() })
+      .set({ status: "PUBLISHED", slug, updatedAt: new Date().toISOString() })
       .where(eq(stories.id, storyId));
     
     return { success: true };

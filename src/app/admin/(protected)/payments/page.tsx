@@ -53,7 +53,6 @@ export default async function AdminPaymentsPage() {
               <option value="SUCCESS">Successful</option>
               <option value="FAILED">Failed</option>
               <option value="INITIATED">Pending</option>
-              <option value="REFUNDED">Refunded</option>
             </select>
           </div>
         </div>
@@ -116,11 +115,7 @@ export default async function AdminPaymentsPage() {
                           <Clock className="w-3 h-3" /> Pending
                         </span>
                       )}
-                      {tx.status === "REFUNDED" && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium bg-slate-200 text-slate-700">
-                          <Undo2 className="w-3 h-3" /> Refunded
-                        </span>
-                      )}
+
                     </td>
                     <td className="px-6 py-4 text-right">
                       <Button variant="ghost" size="icon" className="text-slate-400 hover:text-slate-900">

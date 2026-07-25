@@ -34,7 +34,6 @@ export default async function AdminDashboard() {
   const successfulTx = allTx.filter(t => t.status === "SUCCESS");
   const failedTx = allTx.filter(t => t.status === "FAILED");
   const pendingTx = allTx.filter(t => t.status === "INITIATED");
-  const refundTx = allTx.filter(t => t.status === "REFUNDED");
 
   const totalRevenue = successfulTx.reduce((sum, t) => sum + t.amount, 0) / 100;
   
@@ -97,7 +96,6 @@ export default async function AdminDashboard() {
         <MetricCard title="Successful Payments" value={successfulTx.length} icon={CheckCircle2} color="text-emerald-600" bg="bg-emerald-100" />
         <MetricCard title="Pending Payments" value={pendingTx.length} icon={Clock} color="text-amber-600" bg="bg-amber-100" />
         <MetricCard title="Failed Payments" value={failedTx.length} icon={XCircle} color="text-rose-600" bg="bg-rose-100" />
-        <MetricCard title="Refund Requests" value={refundTx.length} icon={Undo2} color="text-slate-600" bg="bg-slate-100" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-4">

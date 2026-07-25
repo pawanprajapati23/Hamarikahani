@@ -38,8 +38,8 @@ export default async function PublicStoryPage({ params }: { params: { slug: stri
   return (
     <main className="min-h-screen bg-background">
       <PublicStoryRenderer 
-        title={content.title} 
-        blocks={content.blocks} 
+        title={content.title || ""}
+        blocks={content.blocks || []}
         themeId={story.themeId} 
         slug={params.slug}
       />
