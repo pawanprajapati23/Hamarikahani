@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import { AppProvider } from "@/providers/app-provider";
+import { FloatingHearts } from "@/components/ui/FloatingHearts";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -42,8 +43,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${playfair.variable}`}>
-      <body className="min-h-screen bg-background font-sans antialiased">
-        <AppProvider>{children}</AppProvider>
+      <body className="min-h-screen bg-background font-sans antialiased relative">
+        <FloatingHearts />
+        <div className="relative z-10">
+          <AppProvider>{children}</AppProvider>
+        </div>
       </body>
     </html>
   );

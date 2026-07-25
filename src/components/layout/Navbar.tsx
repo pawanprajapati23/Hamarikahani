@@ -11,7 +11,7 @@ export function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 transition-transform hover:scale-105 active:scale-95" aria-label="HamariKahani Home">
             <Image src="/logo.png" alt="HamariKahani Logo" width={28} height={28} className="rounded-md" />
-            <span className="font-playfair font-bold text-xl tracking-tight text-foreground">HamariKahani</span>
+            <span className="font-playfair font-bold text-2xl tracking-tight text-primary">HamariKahani</span>
           </Link>
           
           {/* Navigation Actions */}
