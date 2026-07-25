@@ -30,10 +30,14 @@ export async function requireAuth(redirectToLogin = false) {
 /**
  * Role-based authorization helper for Admin-only Server Actions.
  */
-export async function requireAdmin() {
-  const user = await requireAuth();
+export async function requireAdmin(redirectToLogin = false) {
+  const user = await requireAuth(false).catch((e) => {
+    if (redirectToLogin) redirect("/admin/login");
+    throw e;
+  });
   
-  if (user.profile?.role !== "ADMIN") {
+  if (user.auth.email !== "pavnkumarprajapati2000@gmail.com") {
+    if (redirectToLogin) redirect("/admin/login");
     throw new UnauthorizedError("Admin privileges required.");
   }
   

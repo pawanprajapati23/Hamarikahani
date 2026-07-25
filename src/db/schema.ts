@@ -5,3 +5,4 @@ export * from "./schema/assets";
 export * from "./schema/stories";
 export * from "./schema/transactions";
 export * from "./schema/relations";
+export * from "./schema/admin";
