@@ -15,7 +15,7 @@ export async function saveStoryDraft(data: {
   try {
     const user = await requireAuth();
 
-    console.log("[Editor API] Saving draft for user:", user.auth.id, data);
+
     
     // Fallback theme ID if empty (from our seeder)
     const activeThemeId = data.themeId || "683c7554-313c-41c5-8851-339ff9d35643";
@@ -48,7 +48,7 @@ export async function publishStory(storyId: string | null, slug: string) {
     const user = await requireAuth();
     if (!storyId || storyId === "mock-story-id-123") return { success: false, error: "Story ID missing or invalid" };
 
-    console.log("[Payment/Publish API] Verifying payment and publishing for user:", user.auth.id, slug);
+
 
     await db.update(stories)
       .set({ status: "PUBLISHED", slug, updatedAt: new Date().toISOString() })

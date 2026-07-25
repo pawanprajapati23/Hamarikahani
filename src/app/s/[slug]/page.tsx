@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { db } from "@/db/drizzle";
 import { stories } from "@/db/schema";
 import { eq } from "drizzle-orm";
@@ -6,8 +7,13 @@ import { PublicStoryRenderer } from "@/features/story/components/PublicStoryRend
 import { Metadata } from "next";
 import { StoryContent } from "@/db/schema/stories";
 
+const getStory = cache(async (slug: string) => {
+  const [story] = await db.select().from(stories).where(eq(stories.slug, slug));
+  return story;
+});
+
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const [story] = await db.select().from(stories).where(eq(stories.slug, params.slug));
+  const story = await getStory(params.slug);
   if (!story || story.status !== "PUBLISHED") return { title: "Story Not Found" };
   
   const content = story.content as StoryContent;
@@ -24,7 +30,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
 export default async function PublicStoryPage({ params }: { params: { slug: string } }) {
   // Query the story from Postgres matching the highly-optimized uniqueSlug index
-  const [story] = await db.select().from(stories).where(eq(stories.slug, params.slug));
+  // Deduplicated via React cache()
+  const story = await getStory(params.slug);
   
   if (!story || story.status !== "PUBLISHED") {
     return notFound();

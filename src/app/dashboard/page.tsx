@@ -2,7 +2,7 @@ import { requireAuth } from "@/features/auth/utils/server-auth";
 import { signOut } from "@/features/auth/api/actions";
 import { db } from "@/db/drizzle";
 import { stories, StoryContent } from "@/db/schema/stories";
-import { eq, desc, and, isNull } from "drizzle-orm";
+import { eq, desc, and, isNull, sql } from "drizzle-orm";
 import Link from "next/link";
 import { Plus, Settings, BarChart3, Clock, CheckCircle2, Globe, ArrowRight, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -26,19 +26,30 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
     .limit(pageSize)
     .offset(offset);
 
-  // Fetch total counts for metrics and pagination
-  const allStories = await db.select({ id: stories.id, status: stories.status }).from(stories)
-    .where(
-      and(
-        eq(stories.userId, user.auth.id),
-        isNull(stories.deletedAt)
-      )
-    );
+  // Fetch total counts for metrics using SQL aggregations instead of loading everything into memory
+  const statusCounts = await db.select({
+    status: stories.status,
+    count: sql<number>`count(*)::int`
+  })
+  .from(stories)
+  .where(
+    and(
+      eq(stories.userId, user.auth.id),
+      isNull(stories.deletedAt)
+    )
+  )
+  .groupBy(stories.status);
     
-  const totalStoriesCount = allStories.length;
+  let draftCount = 0;
+  let publishedCount = 0;
+  
+  statusCounts.forEach(row => {
+    if (row.status === "DRAFT") draftCount = row.count;
+    if (row.status === "PUBLISHED") publishedCount = row.count;
+  });
+
+  const totalStoriesCount = draftCount + publishedCount;
   const totalPages = Math.ceil(totalStoriesCount / pageSize);
-  const draftCount = allStories.filter(s => s.status === "DRAFT").length;
-  const publishedCount = allStories.filter(s => s.status === "PUBLISHED").length;
 
   return (
     <div className="min-h-screen bg-background flex flex-col md:flex-row">
