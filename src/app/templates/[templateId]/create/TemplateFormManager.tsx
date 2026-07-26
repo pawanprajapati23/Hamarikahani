@@ -54,18 +54,25 @@ export function TemplateFormManager({ templateId, templateConfig, userId }: { te
     }
     setSlugStatus("CHECKING");
     
-    // Check in DB
-    const supabase = createClient();
-    const { data, error } = await supabase
-      .from("stories")
-      .select("id")
-      .eq("slug", customSlug)
-      .single();
+    // Check in DB using server action to avoid schema cache issues and RLS
+    try {
+      const { checkSlugAvailable } = await import("@/features/editor/api/actions");
+      const { available, error } = await checkSlugAvailable(customSlug);
       
-    if (data) {
-      setSlugStatus("TAKEN");
-    } else {
-      setSlugStatus("AVAILABLE");
+      if (error) {
+        toast.error("Failed to check URL availability");
+        setSlugStatus("IDLE");
+        return;
+      }
+      
+      if (!available) {
+        setSlugStatus("TAKEN");
+      } else {
+        setSlugStatus("AVAILABLE");
+      }
+    } catch (e: any) {
+      toast.error("Error checking availability");
+      setSlugStatus("IDLE");
     }
   };
 
@@ -76,25 +83,19 @@ export function TemplateFormManager({ templateId, templateConfig, userId }: { te
     }
 
     try {
-      // 1. Create a Draft Story in DB
-      const supabase = createClient();
-      const { data: story, error } = await supabase
-        .from("stories")
-        .insert({
-          user_id: userId,
-          title: templateConfig.name,
-          slug: customSlug,
-          category: templateConfig.category,
-          theme_id: "theme-light",
-          content: [previewBlock],
-          status: "DRAFT"
-        })
-        .select()
-        .single();
+      // 1. Create a Draft Story in DB using server action to avoid schema cache issues and RLS
+      const { saveStoryDraft } = await import("@/features/editor/api/actions");
+      const res = await saveStoryDraft({
+        storyId: null,
+        category: templateConfig.category || "template",
+        themeId: "", // Will use fallback
+        title: templateConfig.name,
+        blocks: [previewBlock]
+      });
 
-      if (error) throw error;
+      if (!res.success || !res.id) throw new Error(res.error || "Failed to create draft");
 
-      setStoryId(story.id);
+      setStoryId(res.id);
       setIsCheckoutOpen(true);
     } catch (e: any) {
       toast.error(e.message || "Failed to create draft");

@@ -60,3 +60,16 @@ export async function publishStory(storyId: string | null, slug: string) {
     return { success: false, error: "Failed to publish story" };
   }
 }
+
+export async function checkSlugAvailable(slug: string) {
+  try {
+    const existing = await db.query.stories.findFirst({
+      where: eq(stories.slug, slug),
+      columns: { id: true }
+    });
+    return { available: !existing };
+  } catch (error: any) {
+    console.error("Error checking slug:", error);
+    return { available: false, error: "Failed to check slug" };
+  }
+}
