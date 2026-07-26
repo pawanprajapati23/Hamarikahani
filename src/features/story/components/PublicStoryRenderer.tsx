@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { ValentineTemplate } from "./ValentineTemplate";
 import { BirthdayTemplate } from "./BirthdayTemplate";
 import { AnniversaryTemplate } from "./AnniversaryTemplate";
+import { SorryTemplate } from "./SorryTemplate";
+import { MissYouTemplate } from "./MissYouTemplate";
 
 export function PublicStoryRenderer({ title, blocks, themeId, slug }: { title: string, blocks: any[], themeId: string, slug?: string }) {
   const theme = THEME_ENGINE[themeId] || FALLBACK_THEME;
@@ -86,6 +88,14 @@ export function PublicStoryRenderer({ title, blocks, themeId, slug }: { title: s
 
               {block.type === "anniversary_template" && (
                 <AnniversaryTemplate metadata={block.metadata} />
+              )}
+
+              {block.type === "sorry_template" && (
+                <SorryTemplate metadata={block.metadata} />
+              )}
+
+              {block.type === "miss_you_template" && (
+                <MissYouTemplate metadata={block.metadata} />
               )}
             </motion.div>
           ))}

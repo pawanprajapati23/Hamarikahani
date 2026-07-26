@@ -46,12 +46,28 @@ export const MOCK_TEMPLATE_BLOCKS: Record<string, EditorBlock> = {
   },
   "sorry": {
     id: "mock-sorry",
-    type: "text",
-    content: "Coming soon! The Apology Template.",
+    type: "sorry_template",
+    content: "",
+    metadata: {
+      recipientName: "My Friend",
+      senderName: "Me",
+      message: "I messed up and I'm really sorry. Please forgive me?",
+      promiseText: "I promise to do better and never hurt you again.",
+      sadGifUrl: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHk1NjhzMnlybnR6ZWg4OTMwcThnbWdmeGk1Nnd2M2NxdHJqMXZpZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/L95W4wv8nnb9K/giphy.gif",
+      happyGifUrl: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Z0MmlkNjIzbWNxdjF3aGRyZjNha2l0Z3J4NDV5dDRyZHhtMnhqMCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/MDJ9IbxxvDUQM/giphy.gif"
+    }
   },
   "miss_you": {
     id: "mock-miss-you",
-    type: "text",
-    content: "Coming soon! The Miss You Template.",
+    type: "miss_you_template",
+    content: "",
+    metadata: {
+      recipientName: "My Love",
+      senderName: "Me",
+      message: "Days feel so long without you. I miss you more than words can say.",
+      photos: [
+        "https://images.unsplash.com/photo-1516239482977-b550ba7253f2?q=80&w=2940&auto=format&fit=crop"
+      ]
+    }
   }
 };

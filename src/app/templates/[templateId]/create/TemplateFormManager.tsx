@@ -13,6 +13,8 @@ import { createClient } from "@/lib/supabase/client";
 import { BirthdayForm } from "@/features/editor/components/forms/BirthdayForm";
 import { ValentineForm } from "@/features/editor/components/forms/ValentineForm";
 import { AnniversaryForm } from "@/features/editor/components/forms/AnniversaryForm";
+import { SorryForm } from "@/features/editor/components/forms/SorryForm";
+import { MissYouForm } from "@/features/editor/components/forms/MissYouForm";
 
 // Mocks for now until we build the real forms
 import { MOCK_TEMPLATE_BLOCKS } from "@/config/mock-blocks";
@@ -136,7 +138,13 @@ export function TemplateFormManager({ templateId, templateConfig, userId }: { te
                 {templateId === "anniversary" && (
                   <AnniversaryForm formData={formData} onChange={setFormData} />
                 )}
-                {templateId !== "birthday" && templateId !== "valentine" && templateId !== "anniversary" && (
+                {templateId === "sorry" && (
+                  <SorryForm formData={formData} onChange={setFormData} />
+                )}
+                {templateId === "miss_you" && (
+                  <MissYouForm formData={formData} onChange={setFormData} />
+                )}
+                {templateId !== "birthday" && templateId !== "valentine" && templateId !== "anniversary" && templateId !== "sorry" && templateId !== "miss_you" && (
                   <div className="p-8 text-center bg-foreground/5 rounded-2xl border border-foreground/10 border-dashed">
                     <p className="text-muted-foreground font-medium">Coming soon! This template is currently in development.</p>
                   </div>
