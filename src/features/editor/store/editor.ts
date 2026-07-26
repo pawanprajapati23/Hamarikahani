@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 export type EditorStep = "SETUP" | "CONTENT" | "PREVIEW";
-export type BlockType = "text" | "image" | "video" | "music" | "quote" | "spacer";
+export type BlockType = "text" | "image" | "video" | "music" | "quote" | "spacer" | "valentine_template";
 
 export interface EditorBlock {
   id: string;

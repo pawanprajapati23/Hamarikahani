@@ -5,8 +5,9 @@ import { THEME_ENGINE, FALLBACK_THEME } from "@/features/editor/utils/themes";
 import { motion, AnimatePresence } from "framer-motion";
 import { Share2, Copy, Check, Facebook, Twitter, Link as LinkIcon, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ValentineTemplate } from "./ValentineTemplate";
 
-export function PublicStoryRenderer({ title, blocks, themeId, slug }: { title: string, blocks: any[], themeId: string, slug: string }) {
+export function PublicStoryRenderer({ title, blocks, themeId, slug }: { title: string, blocks: any[], themeId: string, slug?: string }) {
   const theme = THEME_ENGINE[themeId] || FALLBACK_THEME;
   const [showShare, setShowShare] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -71,6 +72,10 @@ export function PublicStoryRenderer({ title, blocks, themeId, slug }: { title: s
 
               {block.type === "spacer" && (
                 <div style={{ height: block.metadata?.height === "large" ? "128px" : block.metadata?.height === "small" ? "32px" : "64px" }} />
+              )}
+
+              {block.type === "valentine_template" && (
+                <ValentineTemplate metadata={block.metadata} />
               )}
             </motion.div>
           ))}

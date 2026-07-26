@@ -5,7 +5,6 @@ import { EditorLayout } from "./EditorLayout";
 import { SetupStep } from "./SetupStep";
 import { ContentStep } from "./ContentStep";
 import { PreviewStep } from "./PreviewStep";
-import { EditorSidebar } from "./Sidebar";
 import { CheckoutModal } from "@/features/checkout/components/CheckoutModal";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -15,7 +14,7 @@ export function EditorContainer() {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
   return (
-    <EditorLayout sidebar={step === "CONTENT" ? <EditorSidebar /> : undefined}>
+    <EditorLayout>
       {step === "SETUP" && <SetupStep />}
       {step === "CONTENT" && <ContentStep />}
       {step === "PREVIEW" && (

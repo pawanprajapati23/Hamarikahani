@@ -8,14 +8,13 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { saveStoryDraft } from "../api/actions";
 
-export function EditorLayout({ children, sidebar }: { children: ReactNode, sidebar?: ReactNode }) {
+export function EditorLayout({ children }: { children: ReactNode }) {
   const { 
     step, setStep, category, themeId, title, blocks, storyId, setStoryId,
     hasUnsavedChanges, setHasUnsavedChanges, lastSavedAt, setLastSavedAt
   } = useEditorStore();
   
   const [isSaving, setIsSaving] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Core Auto-Save Engine
   useEffect(() => {
@@ -73,11 +72,7 @@ export function EditorLayout({ children, sidebar }: { children: ReactNode, sideb
         </div>
         
         <div className="flex items-center gap-2 sm:gap-4">
-          {step === "CONTENT" && (
-            <Button variant="outline" size="icon" className="lg:hidden rounded-full" onClick={() => setSidebarOpen(!sidebarOpen)}>
-              <LayoutPanelLeft className="w-5 h-5" />
-            </Button>
-          )}
+          {/* Removed Mobile Sidebar Toggle */}
           
           <div className="hidden sm:flex items-center text-xs text-muted-foreground mr-2 font-medium">
             {isSaving ? (
@@ -109,16 +104,7 @@ export function EditorLayout({ children, sidebar }: { children: ReactNode, sideb
 
       {/* Workspace */}
       <div className="flex flex-1 overflow-hidden relative">
-        {step === "CONTENT" && sidebar && (
-          <aside className={`
-            absolute lg:relative z-10 w-72 lg:w-80 h-full bg-secondary/30 border-r border-border/40 flex flex-col transition-transform duration-300
-            ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
-          `}>
-            {sidebar}
-          </aside>
-        )}
-
-        <main className="flex-1 overflow-y-auto p-4 sm:p-8 lg:p-12 relative" onClick={() => setSidebarOpen(false)}>
+        <main className="flex-1 overflow-y-auto p-4 sm:p-8 lg:p-12 relative w-full">
           {children}
         </main>
       </div>

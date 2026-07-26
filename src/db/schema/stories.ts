@@ -7,7 +7,7 @@ import { sql } from "drizzle-orm";
 
 export interface EditorBlock {
   id: string;
-  type: "text" | "image" | "video" | "music" | "quote" | "spacer";
+  type: "text" | "image" | "video" | "music" | "quote" | "spacer" | "valentine_template";
   content: string;
   metadata?: Record<string, any>;
 }
