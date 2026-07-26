@@ -56,18 +56,24 @@ export default function HomePage() {
                     {template.description}
                   </p>
 
-                  {/* Two Buttons ONLY */}
-                  <div className="grid grid-cols-2 gap-3 mt-auto">
-                    <Button variant="outline" className="w-full rounded-full gap-2 font-semibold" asChild>
-                      <Link href={template.previewUrl}>
-                        <PlayCircle className="w-4 h-4" /> Preview
-                      </Link>
-                    </Button>
-                    <Button className="w-full rounded-full gap-2 font-semibold bg-foreground text-background hover:bg-foreground/90" asChild>
-                      <Link href={template.createUrl}>
-                        <PenTool className="w-4 h-4" /> Create
-                      </Link>
-                    </Button>
+                  <div className="flex flex-col gap-4 mt-auto">
+                    <div className="flex items-center justify-between border-t border-border/50 pt-4">
+                      <span className="text-muted-foreground line-through text-sm font-medium tracking-wide">₹{template.originalPrice}</span>
+                      <span className="text-xl font-bold text-emerald-600 bg-emerald-500/10 px-3 py-1 rounded-full">₹{template.price}</span>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-3">
+                      <Button variant="outline" className="w-full rounded-full gap-2 font-semibold" asChild>
+                        <Link href={template.previewUrl} target="_blank">
+                          <PlayCircle className="w-4 h-4" /> Preview
+                        </Link>
+                      </Button>
+                      <Button className="w-full rounded-full gap-2 font-semibold bg-foreground text-background hover:bg-foreground/90" asChild>
+                        <Link href={template.createUrl}>
+                          <PenTool className="w-4 h-4" /> Create
+                        </Link>
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>

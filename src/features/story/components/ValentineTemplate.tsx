@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { BackgroundMusic } from "@/components/ui/BackgroundMusic";
 
 export function ValentineTemplate({ metadata }: { metadata: any }) {
   const [accepted, setAccepted] = useState(false);
@@ -43,6 +44,7 @@ export function ValentineTemplate({ metadata }: { metadata: any }) {
         <h2 className="text-4xl md:text-5xl font-playfair font-bold text-rose-500">
           {successMessage}
         </h2>
+        <BackgroundMusic url={metadata?.musicUrl} />
       </div>
     );
   }
@@ -93,6 +95,7 @@ export function ValentineTemplate({ metadata }: { metadata: any }) {
           </Button>
         </motion.div>
       </div>
+      <BackgroundMusic url={metadata?.musicUrl} />
     </div>
   );
 }

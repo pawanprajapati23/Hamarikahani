@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { BackgroundMusic } from "@/components/ui/BackgroundMusic";
 
 export function BirthdayTemplate({ metadata }: { metadata: any }) {
   const [opened, setOpened] = useState(false);
@@ -92,6 +93,8 @@ export function BirthdayTemplate({ metadata }: { metadata: any }) {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <BackgroundMusic url={metadata?.musicUrl} />
     </div>
   );
 }

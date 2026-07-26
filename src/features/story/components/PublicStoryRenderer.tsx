@@ -7,6 +7,7 @@ import { Share2, Copy, Check, Facebook, Twitter, Link as LinkIcon, Heart } from 
 import { Button } from "@/components/ui/button";
 import { ValentineTemplate } from "./ValentineTemplate";
 import { BirthdayTemplate } from "./BirthdayTemplate";
+import { AnniversaryTemplate } from "./AnniversaryTemplate";
 
 export function PublicStoryRenderer({ title, blocks, themeId, slug }: { title: string, blocks: any[], themeId: string, slug?: string }) {
   const theme = THEME_ENGINE[themeId] || FALLBACK_THEME;
@@ -81,6 +82,10 @@ export function PublicStoryRenderer({ title, blocks, themeId, slug }: { title: s
               
               {block.type === "birthday_template" && (
                 <BirthdayTemplate metadata={block.metadata} />
+              )}
+
+              {block.type === "anniversary_template" && (
+                <AnniversaryTemplate metadata={block.metadata} />
               )}
             </motion.div>
           ))}

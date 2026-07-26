@@ -93,6 +93,17 @@ export function BirthdayForm({ formData, onChange }: BirthdayFormProps) {
           />
           <p className="text-xs text-muted-foreground">The photo or GIF that appears after the gift box bursts.</p>
         </div>
+
+        <div className="space-y-2 pt-4">
+          <Label htmlFor="musicUrl">Background Music (Optional)</Label>
+          <Input 
+            id="musicUrl"
+            placeholder="Spotify or YouTube URL (e.g. https://open.spotify.com/...)"
+            value={formData.musicUrl || ""}
+            onChange={e => handleChange("musicUrl", e.target.value)}
+          />
+          <p className="text-xs text-muted-foreground">Paste a Spotify or YouTube track link to play background music.</p>
+        </div>
       </div>
     </div>
   );

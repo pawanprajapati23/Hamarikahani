@@ -30,8 +30,19 @@ export const MOCK_TEMPLATE_BLOCKS: Record<string, EditorBlock> = {
   },
   "anniversary": {
     id: "mock-anniversary",
-    type: "text",
-    content: "Coming soon! The Anniversary Template.",
+    type: "anniversary_template",
+    content: "",
+    metadata: {
+      coupleNames: "Rahul & Priya",
+      years: "5",
+      anniversaryDate: "Oct 12, 2021",
+      message: "Every love story is beautiful, but ours is my favorite. Happy Anniversary!",
+      timelineEvents: [
+        { year: "2018", title: "First Met", image: "https://images.unsplash.com/photo-1516585427167-9f4af9627e6c?q=80&w=2940&auto=format&fit=crop" },
+        { year: "2021", title: "Tied the Knot", image: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=2940&auto=format&fit=crop" },
+      ],
+      coverPhoto: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=2940&auto=format&fit=crop",
+    }
   },
   "sorry": {
     id: "mock-sorry",
