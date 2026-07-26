@@ -50,12 +50,13 @@ export function CheckoutModal({ isOpen, onClose, storyId, customSlug }: { isOpen
               customSlug
             );
             if (verifyRes.success) {
-              setStep("SUCCESS");
-              toast.success("Payment verified! Story Published.");
+              toast.success("Payment verified! Redirecting to your story...");
+              // Auto-redirect to avoid user confusion
+              router.push(`/s/${customSlug}`);
             } else {
               toast.error(verifyRes.error || "Verification failed");
+              setIsProcessing(false);
             }
-            setIsProcessing(false);
           },
           prefill: {
             name: "Premium User",

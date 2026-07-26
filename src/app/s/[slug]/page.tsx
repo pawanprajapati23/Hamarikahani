@@ -1,7 +1,7 @@
 import { cache } from "react";
 import { db } from "@/db/drizzle";
 import { stories } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { PublicStoryRenderer } from "@/features/story/components/PublicStoryRenderer";
 import { Metadata } from "next";
@@ -39,8 +39,12 @@ export default async function PublicStoryPage({ params }: { params: { slug: stri
 
   const content = story.content as StoryContent;
   
-  // Update views/analytics asynchronously without blocking the render (Fire and Forget)
-  fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/analytics/view`, { method: "POST", body: JSON.stringify({ storyId: story.id }) }).catch(console.error);
+  // Update views asynchronously without blocking the render
+  db.update(stories)
+    .set({ views: sql`${stories.views} + 1` })
+    .where(eq(stories.id, story.id))
+    .execute()
+    .catch(console.error);
 
   return (
     <main className="min-h-screen bg-background">
