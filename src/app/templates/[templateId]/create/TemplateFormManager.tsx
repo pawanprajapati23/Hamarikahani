@@ -10,6 +10,9 @@ import { CheckoutModal } from "@/features/checkout/components/CheckoutModal";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 
+import { BirthdayForm } from "@/features/editor/components/forms/BirthdayForm";
+import { ValentineForm } from "@/features/editor/components/forms/ValentineForm";
+
 // Mocks for now until we build the real forms
 import { MOCK_TEMPLATE_BLOCKS } from "@/config/mock-blocks";
 
@@ -122,19 +125,18 @@ export function TemplateFormManager({ templateId, templateConfig, userId }: { te
             <div className="space-y-6">
               <h2 className="text-2xl font-playfair font-bold">Edit Details</h2>
               
-              {/* TODO: Replace with real form components per template */}
               <div className="space-y-4">
-                <p className="text-sm text-muted-foreground">Form fields for {templateId} will appear here.</p>
-                {/* Temporary generic form bound to formData */}
-                {Object.keys(formData).map(key => (
-                  <div key={key} className="space-y-2">
-                    <label className="text-sm font-medium capitalize">{key.replace(/([A-Z])/g, " $1")}</label>
-                    <Input 
-                      value={formData[key]} 
-                      onChange={e => setFormData({...formData, [key]: e.target.value})} 
-                    />
+                {templateId === "birthday" && (
+                  <BirthdayForm formData={formData} onChange={setFormData} />
+                )}
+                {templateId === "valentine" && (
+                  <ValentineForm formData={formData} onChange={setFormData} />
+                )}
+                {templateId !== "birthday" && templateId !== "valentine" && (
+                  <div className="p-8 text-center bg-foreground/5 rounded-2xl border border-foreground/10 border-dashed">
+                    <p className="text-muted-foreground font-medium">Coming soon! This template is currently in development.</p>
                   </div>
-                ))}
+                )}
               </div>
             </div>
           )}
