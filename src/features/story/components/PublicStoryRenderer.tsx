@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Share2, Copy, Check, Facebook, Twitter, Link as LinkIcon, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ValentineTemplate } from "./ValentineTemplate";
+import { BirthdayTemplate } from "./BirthdayTemplate";
 
 export function PublicStoryRenderer({ title, blocks, themeId, slug }: { title: string, blocks: any[], themeId: string, slug?: string }) {
   const theme = THEME_ENGINE[themeId] || FALLBACK_THEME;
@@ -76,6 +77,10 @@ export function PublicStoryRenderer({ title, blocks, themeId, slug }: { title: s
 
               {block.type === "valentine_template" && (
                 <ValentineTemplate metadata={block.metadata} />
+              )}
+              
+              {block.type === "birthday_template" && (
+                <BirthdayTemplate metadata={block.metadata} />
               )}
             </motion.div>
           ))}
