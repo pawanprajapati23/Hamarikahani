@@ -1,92 +1,82 @@
 import { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { ScrollProgress } from "@/components/ui/ScrollProgress";
-import { BackToTop } from "@/components/ui/BackToTop";
-import dynamic from "next/dynamic";
-import { HeroSection } from "@/features/marketing/components/HeroSection";
-import { HowItWorksSection } from "@/features/marketing/components/HowItWorksSection";
-import { CategoriesSection } from "@/features/marketing/components/CategoriesSection";
-import { faqData } from "@/features/marketing/constants/faq";
-
-// Lazy load below-the-fold components to reduce initial JS bundle size
-const ThemesSection = dynamic(() => import("@/features/marketing/components/ThemesSection").then(mod => mod.ThemesSection));
-const TestimonialsSection = dynamic(() => import("@/features/marketing/components/TestimonialsSection").then(mod => mod.TestimonialsSection));
-const FAQSection = dynamic(() => import("@/features/marketing/components/FAQSection").then(mod => mod.FAQSection));
-const CTASection = dynamic(() => import("@/features/marketing/components/CTASection").then(mod => mod.CTASection));
+import { TEMPLATES } from "@/config/templates";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { PlayCircle, PenTool } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "HamariKahani - Premium Digital Storytelling",
   description: "Create beautiful, personalized surprise pages for your loved ones.",
-  openGraph: {
-    title: "HamariKahani",
-    description: "Create beautiful, personalized surprise pages for your loved ones.",
-    url: "https://hamarikahani.in",
-    siteName: "HamariKahani",
-    images: [
-      {
-        url: "https://hamarikahani.in/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "HamariKahani Preview Image",
-      }
-    ],
-    locale: "en_IN",
-    type: "website",
-  }
 };
 
 export default function HomePage() {
-  // Structured Data (JSON-LD) for Search Engines
-  const jsonLd = [
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      name: "HamariKahani",
-      url: "https://hamarikahani.in",
-      description: "Premium digital storytelling platform for emotional surprises.",
-      potentialAction: {
-        "@type": "SearchAction",
-        target: "https://hamarikahani.in/search?q={search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: faqData.map((faq) => ({
-        "@type": "Question",
-        name: faq.question,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: faq.answer
-        }
-      }))
-    }
-  ];
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      
-      <ScrollProgress />
       <Navbar />
       
-      <main className="flex-1 flex flex-col">
-        <HeroSection />
-        <HowItWorksSection />
-        <CategoriesSection />
-        <ThemesSection />
-        <TestimonialsSection />
-        <FAQSection />
-        <CTASection />
+      <main className="flex-1 flex flex-col min-h-screen bg-background">
+        {/* Hero Section */}
+        <section className="pt-32 pb-16 px-4 text-center max-w-4xl mx-auto space-y-6">
+          <h1 className="text-5xl md:text-7xl font-bold font-playfair tracking-tight text-foreground">
+            Make Them Feel <span className="text-primary italic">Special</span>
+          </h1>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            Choose a premium template, customize it with your own feelings, and share a magical digital surprise in minutes.
+          </p>
+        </section>
+
+        {/* Templates Grid Section */}
+        <section className="py-16 px-4 md:px-8 max-w-7xl mx-auto w-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {TEMPLATES.map((template) => (
+              <div 
+                key={template.id} 
+                className="group relative flex flex-col bg-card rounded-3xl border border-border/50 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
+              >
+                {/* Cover Image */}
+                <div className="aspect-[4/3] w-full overflow-hidden relative">
+                  <img 
+                    src={template.coverImage} 
+                    alt={template.name}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute top-4 right-4 bg-background/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-medium border border-border">
+                    {template.category}
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="p-6 flex flex-col flex-1">
+                  <h3 className="text-2xl font-bold font-playfair mb-2 text-foreground">
+                    {template.name}
+                  </h3>
+                  <p className="text-muted-foreground text-sm flex-1 mb-8">
+                    {template.description}
+                  </p>
+
+                  {/* Two Buttons ONLY */}
+                  <div className="grid grid-cols-2 gap-3 mt-auto">
+                    <Button variant="outline" className="w-full rounded-full gap-2 font-semibold" asChild>
+                      <Link href={template.previewUrl}>
+                        <PlayCircle className="w-4 h-4" /> Preview
+                      </Link>
+                    </Button>
+                    <Button className="w-full rounded-full gap-2 font-semibold bg-foreground text-background hover:bg-foreground/90" asChild>
+                      <Link href={template.createUrl}>
+                        <PenTool className="w-4 h-4" /> Create
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
       </main>
 
       <Footer />
-      <BackToTop />
     </>
   );
 }

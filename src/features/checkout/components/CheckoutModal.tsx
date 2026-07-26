@@ -11,22 +11,10 @@ import { useEditorStore } from "@/features/editor/store/editor";
 import { publishStory } from "@/features/editor/api/actions";
 import { PRICING } from "@/config/pricing";
 
-export function CheckoutModal({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) {
-  const [step, setStep] = useState<"SLUG" | "PAYMENT" | "SUCCESS">("SLUG");
-  const [slug, setSlug] = useState("");
+export function CheckoutModal({ isOpen, onClose, storyId, customSlug }: { isOpen: boolean, onClose: () => void, storyId: string, customSlug: string }) {
+  const [step, setStep] = useState<"PAYMENT" | "SUCCESS">("PAYMENT");
   const [isProcessing, setIsProcessing] = useState(false);
   const router = useRouter();
-  const { storyId } = useEditorStore();
-
-  const handleSlugCheck = async () => {
-    if (!slug) return toast.error("Please enter a custom link name.");
-    setIsProcessing(true);
-    // Mock API delay for slug availability check
-    setTimeout(() => {
-      setIsProcessing(false);
-      setStep("PAYMENT");
-    }, 1000);
-  };
 
   const handleRazorpayCheckout = async () => {
     setIsProcessing(true);
@@ -59,7 +47,7 @@ export function CheckoutModal({ isOpen, onClose }: { isOpen: boolean, onClose: (
               response.razorpay_payment_id,
               response.razorpay_signature,
               storyId,
-              slug
+              customSlug
             );
             if (verifyRes.success) {
               setStep("SUCCESS");
@@ -100,7 +88,7 @@ export function CheckoutModal({ isOpen, onClose }: { isOpen: boolean, onClose: (
 
   const handleViewStory = () => {
     onClose();
-    router.push(`/s/${slug}`);
+    router.push(`/s/${customSlug}`);
   };
 
   return (
@@ -111,12 +99,10 @@ export function CheckoutModal({ isOpen, onClose }: { isOpen: boolean, onClose: (
           <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary/20 rounded-full blur-2xl" />
           <DialogHeader>
             <DialogTitle className="text-2xl font-playfair font-bold text-foreground">
-              {step === "SLUG" && "Claim Your Link"}
               {step === "PAYMENT" && "Secure Checkout"}
               {step === "SUCCESS" && "Story Published!"}
             </DialogTitle>
             <DialogDescription className="text-muted-foreground mt-2">
-              {step === "SLUG" && "Choose a unique, permanent URL for your story."}
               {step === "PAYMENT" && "One-time payment for lifetime hosting. No subscriptions."}
               {step === "SUCCESS" && "Your digital surprise is live and ready to be shared."}
             </DialogDescription>
@@ -124,29 +110,6 @@ export function CheckoutModal({ isOpen, onClose }: { isOpen: boolean, onClose: (
         </div>
 
         <div className="p-8">
-          {step === "SLUG" && (
-            <div className="space-y-6">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground">Custom Story URL</label>
-                <div className="flex items-center rounded-xl border border-foreground/20 bg-background overflow-hidden focus-within:ring-2 focus-within:ring-primary focus-within:border-transparent transition-all">
-                  <span className="pl-4 text-muted-foreground bg-background whitespace-nowrap text-sm">
-                    hamarikahani.in/s/
-                  </span>
-                  <Input 
-                    value={slug}
-                    onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
-                    placeholder="sarah-25th"
-                    className="border-0 bg-transparent focus-visible:ring-0 px-2 py-6 text-foreground font-medium"
-                  />
-                </div>
-                <p className="text-xs text-muted-foreground">Only lowercase letters, numbers, and hyphens.</p>
-              </div>
-              <Button className="w-full rounded-xl h-12 text-base font-semibold" onClick={handleSlugCheck} disabled={isProcessing}>
-                {isProcessing ? <Loader2 className="w-5 h-5 animate-spin" /> : "Verify Availability"}
-              </Button>
-            </div>
-          )}
-
           {step === "PAYMENT" && (
             <div className="space-y-6">
               <div className="flex items-center justify-between p-4 bg-background border border-foreground/10 rounded-xl">
@@ -181,8 +144,8 @@ export function CheckoutModal({ isOpen, onClose }: { isOpen: boolean, onClose: (
               </div>
               <div>
                 <p className="text-sm text-muted-foreground mb-1">Your story is live at:</p>
-                <a href={`/s/${slug}`} className="font-medium text-primary hover:underline text-lg">
-                  hamarikahani.in/s/{slug}
+                <a href={`/s/${customSlug}`} className="font-medium text-primary hover:underline text-lg">
+                  hamarikahani.in/s/{customSlug}
                 </a>
               </div>
               <Button className="w-full rounded-xl h-12 text-base font-semibold" onClick={handleViewStory}>

@@ -1,7 +1,7 @@
 export const PRICING = {
-  // Production pricing for publishing a story (in Paise, so 49900 = ₹499)
-  STORY_PUBLISH_INR_PAISE: 49900,
+  // Production pricing for publishing a story (in Paise, so 100 = ₹1)
+  STORY_PUBLISH_INR_PAISE: 100,
   
   // Display pricing in rupees
-  STORY_PUBLISH_DISPLAY_INR: 499,
+  STORY_PUBLISH_DISPLAY_INR: 1,
 };

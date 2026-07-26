@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   description: "Sign in to HamariKahani to continue your story.",
 };
 
-export default function LoginPage() {
-  return <LoginForm />;
+export default async function LoginPage({ searchParams }: { searchParams: Promise<{ next?: string }> }) {
+  const { next } = await searchParams;
+  return <LoginForm nextUrl={next} />;
 }

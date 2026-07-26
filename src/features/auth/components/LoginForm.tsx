@@ -18,7 +18,7 @@ const loginSchema = z.object({
 
 type LoginValues = z.infer<typeof loginSchema>;
 
-export function LoginForm() {
+export function LoginForm({ nextUrl }: { nextUrl?: string }) {
   const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<LoginValues>({
@@ -29,7 +29,8 @@ export function LoginForm() {
   const onSubmit = async (data: LoginValues) => {
     try {
       const { signInWithEmail } = await import("../api/actions");
-      const res = await signInWithEmail(data.email, data.password, "/dashboard");
+      const targetUrl = nextUrl || "/dashboard";
+      const res = await signInWithEmail(data.email, data.password, targetUrl);
       
       if (res.error) {
         toast.error(res.error);
@@ -37,7 +38,7 @@ export function LoginForm() {
       }
       
       toast.success("Successfully logged in!");
-      window.location.href = "/dashboard";
+      window.location.href = targetUrl;
     } catch (error: any) {
       toast.error(error.message || "Invalid email or password");
     }
