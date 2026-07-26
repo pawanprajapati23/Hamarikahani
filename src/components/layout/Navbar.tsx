@@ -2,8 +2,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Container } from "./Container";
+import { createClient } from "@/lib/supabase/server";
+import { User, LogOut } from "lucide-react";
 
-export function Navbar() {
+export async function Navbar() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
   return (
     <header className="sticky top-0 w-full border-b border-border/40 bg-background/70 backdrop-blur-xl z-40 transition-colors">
       <Container>
@@ -16,12 +21,30 @@ export function Navbar() {
           
           {/* Navigation Actions */}
           <nav className="flex items-center gap-4" aria-label="Primary Navigation">
-            <Link href="/auth/login" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md px-2 py-1">
-              Sign In
-            </Link>
-            <Button asChild size="sm" className="hidden sm:inline-flex rounded-full">
-              <Link href="/auth/signup">Get Started</Link>
-            </Button>
+            {user ? (
+              <>
+                <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex text-muted-foreground hover:text-foreground">
+                  <Link href="/dashboard">Dashboard</Link>
+                </Button>
+                <div className="flex items-center gap-2 bg-foreground/5 rounded-full pl-2 pr-4 py-1 border border-foreground/10">
+                  <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+                    <User className="w-4 h-4 text-primary" />
+                  </div>
+                  <span className="text-sm font-medium text-foreground max-w-[100px] truncate">
+                    {user.user_metadata?.full_name || user.email?.split('@')[0] || "User"}
+                  </span>
+                </div>
+              </>
+            ) : (
+              <>
+                <Link href="/auth/login" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md px-2 py-1">
+                  Sign In
+                </Link>
+                <Button asChild size="sm" className="hidden sm:inline-flex rounded-full">
+                  <Link href="/auth/signup">Get Started</Link>
+                </Button>
+              </>
+            )}
           </nav>
         </div>
       </Container>

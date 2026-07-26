@@ -95,6 +95,11 @@ export function ImageUploader({ value, onChange, className, label = "Upload Imag
           <input type="file" className="sr-only" accept="image/*" onChange={handleCloudinaryUpload} disabled={isUploading} />
         </label>
       )}
+      {(!process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || !process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET) && (
+        <p className="text-xs text-rose-500 font-medium">
+          Cloudinary not configured. Add NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME and NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET to .env.local
+        </p>
+      )}
     </div>
   );
 }
