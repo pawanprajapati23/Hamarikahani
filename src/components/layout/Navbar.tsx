@@ -26,14 +26,14 @@ export async function Navbar() {
                 <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex text-muted-foreground hover:text-foreground">
                   <Link href="/dashboard">Dashboard</Link>
                 </Button>
-                <div className="flex items-center gap-2 bg-foreground/5 rounded-full pl-2 pr-4 py-1 border border-foreground/10">
+                <Link href="/dashboard" className="flex items-center gap-2 bg-foreground/5 rounded-full pl-2 pr-4 py-1 border border-foreground/10 hover:bg-foreground/10 transition-colors cursor-pointer">
                   <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
                     <User className="w-4 h-4 text-primary" />
                   </div>
                   <span className="text-sm font-medium text-foreground max-w-[100px] truncate">
                     {user.user_metadata?.full_name || user.email?.split('@')[0] || "User"}
                   </span>
-                </div>
+                </Link>
               </>
             ) : (
               <>

@@ -99,6 +99,17 @@ export async function updatePassword(password: string) {
   return { success: true };
 }
 
+export async function updateUserName(fullName: string) {
+  const supabase = await createClient();
+  const { error } = await supabase.auth.updateUser({
+    data: { full_name: fullName }
+  });
+
+  if (error) return { success: false, error: error.message };
+  revalidatePath("/", "layout");
+  return { success: true };
+}
+
 export async function signOut() {
   const supabase = await createClient();
   await supabase.auth.signOut();
