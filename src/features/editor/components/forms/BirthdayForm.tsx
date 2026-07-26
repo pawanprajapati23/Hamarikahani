@@ -75,26 +75,64 @@ export function BirthdayForm({ formData, onChange }: BirthdayFormProps) {
         <h3 className="text-sm font-semibold">Media (Optional)</h3>
         
         <div className="space-y-2">
-          <Label>Gift Box GIF (Step 1)</Label>
+          <Label>Gift Box / Cover Photo (Step 1)</Label>
           <ImageUploader 
             value={formData.giftGif}
             onChange={(url) => handleChange("giftGif", url)}
             label=""
           />
-          <p className="text-xs text-muted-foreground">The initial gift box they will tap on.</p>
+          <p className="text-xs text-muted-foreground">The initial photo or GIF they will see.</p>
         </div>
 
         <div className="space-y-2 pt-4">
-          <Label>Birthday Photo / Cake GIF (Step 2)</Label>
+          <Label>Birthday Cake GIF / Main Photo</Label>
           <ImageUploader 
             value={formData.cakeGif}
             onChange={(url) => handleChange("cakeGif", url)}
             label=""
           />
-          <p className="text-xs text-muted-foreground">The photo or GIF that appears after the gift box bursts.</p>
+          <p className="text-xs text-muted-foreground">The main photo that appears prominently.</p>
         </div>
 
-        <div className="space-y-2 pt-4">
+        <div className="pt-6">
+          <Label className="text-base font-semibold mb-4 block">Photo Gallery (Memories)</Label>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label className="text-xs">Photo 1</Label>
+              <ImageUploader 
+                value={formData.photo1}
+                onChange={(url) => handleChange("photo1", url)}
+                label=""
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-xs">Photo 2</Label>
+              <ImageUploader 
+                value={formData.photo2}
+                onChange={(url) => handleChange("photo2", url)}
+                label=""
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-xs">Photo 3</Label>
+              <ImageUploader 
+                value={formData.photo3}
+                onChange={(url) => handleChange("photo3", url)}
+                label=""
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-xs">Photo 4</Label>
+              <ImageUploader 
+                value={formData.photo4}
+                onChange={(url) => handleChange("photo4", url)}
+                label=""
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-2 pt-6">
           <Label htmlFor="musicUrl">Background Music (Optional)</Label>
           <Input 
             id="musicUrl"
