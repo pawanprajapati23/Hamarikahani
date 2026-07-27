@@ -1,13 +1,20 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { BackgroundMusic } from "@/components/ui/BackgroundMusic";
-import { Heart } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Heart, Sparkles, Quote } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 
 export function MissYouTemplate({ metadata }: { metadata: any }) {
   const [mounted, setMounted] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  
   useEffect(() => setMounted(true), []);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
 
   const {
     recipientName = "My Love",
@@ -22,93 +29,152 @@ export function MissYouTemplate({ metadata }: { metadata: any }) {
   if (!mounted) return null;
 
   return (
-    <div className="flex flex-col items-center min-h-[90vh] w-full relative z-10 py-16 px-6 overflow-hidden rounded-[2rem] bg-gradient-to-br from-indigo-950 via-slate-900 to-purple-950 shadow-2xl">
-      
-      {/* Starry Night / Floating Particles Effect */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(30)].map((_, i) => (
+    <div 
+      ref={containerRef}
+      className="min-h-[100dvh] w-full relative bg-[#0a0a0a] overflow-hidden font-sans selection:bg-rose-500/30"
+    >
+      {/* Dynamic Ambient Background */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(17,24,39,1)_0%,_rgba(0,0,0,1)_100%)]" />
+        <motion.div 
+          animate={{ 
+            opacity: [0.15, 0.3, 0.15],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-rose-900/30 blur-[120px]"
+        />
+        <motion.div 
+          animate={{ 
+            opacity: [0.1, 0.25, 0.1],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-indigo-900/30 blur-[150px]"
+        />
+        
+        {/* Floating dust/stars particles */}
+        {[...Array(40)].map((_, i) => (
           <motion.div
             key={i}
-            initial={{ opacity: 0, y: window.innerHeight }}
+            initial={{ 
+              y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1000),
+              x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
+              opacity: Math.random() * 0.5 + 0.1
+            }}
             animate={{ 
-              opacity: [0, 0.8, 0],
-              y: -100,
-              x: Math.random() * window.innerWidth
+              y: [null, Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1000)],
+              x: [null, Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000)],
+              opacity: [null, Math.random() * 0.8, 0]
             }}
             transition={{
-              duration: Math.random() * 10 + 10,
+              duration: Math.random() * 20 + 20,
               repeat: Infinity,
-              delay: Math.random() * 10,
               ease: "linear"
             }}
-            className="absolute rounded-full bg-white/40 shadow-[0_0_10px_rgba(255,255,255,0.8)]"
-            style={{
-              width: Math.random() * 3 + 1 + "px",
-              height: Math.random() * 3 + 1 + "px",
-              left: Math.random() * 100 + "%"
-            }}
+            className="absolute w-1 h-1 bg-rose-200/40 rounded-full"
+            style={{ filter: 'blur(1px)' }}
           />
         ))}
-        {/* Soft Glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-purple-500/10 blur-[120px] rounded-full pointer-events-none" />
       </div>
 
-      <motion.div 
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, ease: "easeOut" }}
-        className="w-full max-w-3xl mx-auto space-y-16 relative z-10"
-      >
-        <div className="text-center space-y-8 bg-black/20 backdrop-blur-sm p-10 md:p-14 rounded-[3rem] border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.5)]">
+      <div className="relative z-10 max-w-5xl mx-auto px-6 py-24 md:py-32 flex flex-col items-center">
+        {/* Header Section */}
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center w-full max-w-3xl mb-24"
+        >
           <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.5, type: "spring" }}
-            className="w-16 h-16 mx-auto bg-white/10 rounded-full flex items-center justify-center border border-white/20 mb-6"
+            initial={{ scale: 0, rotate: -180 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ duration: 1.5, type: "spring", bounce: 0.4 }}
+            className="w-20 h-20 mx-auto mb-10 rounded-full bg-gradient-to-tr from-rose-500/10 to-indigo-500/10 border border-white/5 flex items-center justify-center backdrop-blur-md shadow-[0_0_40px_rgba(244,63,94,0.15)]"
           >
-            <Heart className="w-8 h-8 text-rose-400 fill-rose-400/20" />
+            <Heart className="w-8 h-8 text-rose-300/80 fill-rose-400/20" />
           </motion.div>
-          
-          <h2 className="text-4xl md:text-6xl font-playfair font-bold text-white tracking-wide">
-            Hey {recipientName},
-          </h2>
-          
-          <p className="text-2xl md:text-4xl font-playfair text-white/80 italic leading-relaxed px-4">
-            "{message}"
-          </p>
-          
-          <div className="pt-6">
-            <div className="w-24 h-px bg-gradient-to-r from-transparent via-white/50 to-transparent mx-auto mb-6" />
-            <p className="text-lg font-medium text-white/60 uppercase tracking-[0.3em]">
-              Yours, {senderName}
-            </p>
-          </div>
-        </div>
 
+          <h1 className="text-5xl md:text-7xl font-playfair font-semibold text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60 mb-8 tracking-tight">
+            Dear {recipientName},
+          </h1>
+          
+          <div className="relative py-8">
+            <Quote className="absolute top-0 left-0 -translate-x-1/2 w-12 h-12 text-white/5 rotate-180" />
+            <p className="text-2xl md:text-4xl font-playfair text-white/80 leading-relaxed italic font-light z-10 relative">
+              {message}
+            </p>
+            <Quote className="absolute bottom-0 right-0 translate-x-1/2 w-12 h-12 text-white/5" />
+          </div>
+
+          <motion.div 
+            initial={{ opacity: 0, width: 0 }}
+            animate={{ opacity: 1, width: "120px" }}
+            transition={{ delay: 0.8, duration: 1 }}
+            className="h-[1px] bg-gradient-to-r from-transparent via-rose-500/50 to-transparent mx-auto mt-16 mb-8"
+          />
+          
+          <p className="text-lg md:text-xl font-light tracking-[0.2em] text-white/50 uppercase">
+            Always yours, <span className="text-rose-200/80 font-medium">{senderName}</span>
+          </p>
+        </motion.div>
+
+        {/* Masonry Gallery Section */}
         {photos && photos.length > 0 && (
-          <div className={`grid grid-cols-1 ${photos.length > 1 ? 'md:grid-cols-2' : ''} gap-8 pt-4`}>
-            {photos.map((photo: string, idx: number) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, scale: 0.9, y: 50 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ delay: 0.6 + (idx * 0.2), duration: 0.8, type: "spring" }}
-                whileHover={{ scale: 1.03, rotate: idx % 2 === 0 ? 1 : -1 }}
-                className={`group rounded-[2rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/20 bg-white/5 p-3 backdrop-blur-md ${idx === 0 && photos.length === 1 ? 'md:col-span-2 max-w-2xl mx-auto' : ''}`}
-              >
-                <div className="relative overflow-hidden rounded-2xl w-full h-72 md:h-96">
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <img 
-                    src={photo} 
-                    alt="Memory" 
-                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-out"
-                  />
-                </div>
-              </motion.div>
-            ))}
+          <div className="w-full mt-10 pb-20">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1 }}
+              className="flex items-center justify-center gap-4 mb-16"
+            >
+              <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-white/10" />
+              <div className="flex items-center gap-2 px-4">
+                <Sparkles className="w-4 h-4 text-rose-300/50" />
+                <h3 className="text-sm tracking-[0.3em] uppercase text-white/40 font-medium">Our Memories</h3>
+                <Sparkles className="w-4 h-4 text-rose-300/50" />
+              </div>
+              <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-white/10" />
+            </motion.div>
+
+            <div className={`columns-1 sm:columns-2 ${photos.length > 2 ? 'lg:columns-3' : ''} gap-6 space-y-6`}>
+              {photos.map((photo: string, idx: number) => (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, y: 50, scale: 0.95 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ 
+                    duration: 0.8, 
+                    delay: idx * 0.1,
+                    ease: [0.22, 1, 0.36, 1]
+                  }}
+                  whileHover={{ 
+                    y: -8,
+                    scale: 1.02,
+                    transition: { duration: 0.4, ease: "easeOut" }
+                  }}
+                  className="relative group break-inside-avoid rounded-[2rem] overflow-hidden bg-white/5 border border-white/10 p-2.5 shadow-2xl backdrop-blur-sm"
+                >
+                  <div className="relative overflow-hidden rounded-3xl bg-black/20">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 z-10" />
+                    <motion.img 
+                      src={photo} 
+                      alt={`Memory ${idx + 1}`}
+                      className="w-full h-auto object-cover"
+                      whileHover={{ scale: 1.05 }}
+                      transition={{ duration: 0.7, ease: "easeOut" }}
+                    />
+                    {/* Subtle glass reflection overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/20 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 transform -translate-x-full group-hover:translate-x-full z-20 pointer-events-none" />
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
         )}
-      </motion.div>
+      </div>
 
       <BackgroundMusic url={musicUrl} />
     </div>
