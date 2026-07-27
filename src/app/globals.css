@@ -2,8 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================
+   HAMARIKAHANI DESIGN SYSTEM
+   Romantic · Elegant · Premium · Emotional
+   ============================================ */
+
 @layer base {
   :root {
+    /* ── Brand Core ── */
     --background: 340 20% 98%;
     --foreground: 340 15% 15%;
 
@@ -33,6 +39,41 @@
     --ring: 340 82% 65%;
 
     --radius: 0.75rem;
+
+    /* ── HamariKahani Extended Tokens ── */
+    --hk-pink: 340 82% 65%;
+    --hk-purple: 280 60% 65%;
+    --hk-rose: 350 80% 88%;
+    --hk-cream: 340 20% 98%;
+    --hk-gold: 43 96% 56%;
+    --hk-gold-light: 43 96% 72%;
+    --hk-warm-white: 30 30% 97%;
+
+    /* ── Glow & Shadow Tokens ── */
+    --hk-glow-pink: rgba(236, 72, 153, 0.35);
+    --hk-glow-purple: rgba(168, 85, 247, 0.3);
+    --hk-glow-gold: rgba(234, 179, 8, 0.25);
+    --hk-shadow-soft: 0 4px 24px -4px rgba(236, 72, 153, 0.08);
+    --hk-shadow-card: 0 8px 32px -8px rgba(236, 72, 153, 0.1);
+    --hk-shadow-elevated: 0 20px 60px -12px rgba(236, 72, 153, 0.15);
+
+    /* ── Spacing Luxury Scale ── */
+    --hk-space-xs: 0.25rem;
+    --hk-space-sm: 0.5rem;
+    --hk-space-md: 1rem;
+    --hk-space-lg: 1.5rem;
+    --hk-space-xl: 2.5rem;
+    --hk-space-2xl: 4rem;
+    --hk-space-3xl: 6rem;
+    --hk-space-hero: 8rem;
+
+    /* ── Transitions ── */
+    --hk-ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
+    --hk-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --hk-duration-fast: 200ms;
+    --hk-duration-normal: 400ms;
+    --hk-duration-slow: 700ms;
+    --hk-duration-cinematic: 1200ms;
   }
 }
 
@@ -40,25 +81,529 @@
   * {
     @apply border-border;
   }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+    text-size-adjust: 100%;
+  }
+
   body {
     @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  /* Premium Selection Colors */
+  ::selection {
+    background: hsl(340 82% 65% / 0.25);
+    color: hsl(340 15% 15%);
+  }
+
+  ::-moz-selection {
+    background: hsl(340 82% 65% / 0.25);
+    color: hsl(340 15% 15%);
+  }
+
+  /* Premium Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(340 30% 80%);
+    border-radius: 100px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(340 50% 70%);
+  }
+
+  /* Hide scrollbar on mobile for cleaner experience */
+  @media (max-width: 768px) {
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    body {
+      scrollbar-width: none;
+    }
   }
 }
 
+/* ============================================
+   ANIMATION KEYFRAMES
+   Soft · Elegant · Meaningful · Never Flashy
+   ============================================ */
+
+@keyframes hk-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-8px) rotate(1deg); }
+  75% { transform: translateY(4px) rotate(-1deg); }
+}
+
+@keyframes hk-float-slow {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(2deg); }
+}
+
+@keyframes hk-glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px var(--hk-glow-pink), 0 0 40px transparent; }
+  50% { box-shadow: 0 0 30px var(--hk-glow-pink), 0 0 60px var(--hk-glow-purple); }
+}
+
+@keyframes hk-shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes hk-sparkle {
+  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1) rotate(180deg); }
+}
+
+@keyframes hk-heartbeat {
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.15); }
+  30% { transform: scale(1); }
+  45% { transform: scale(1.1); }
+  60% { transform: scale(1); }
+}
+
+@keyframes hk-fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes hk-fade-in-down {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes hk-slide-in-right {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes hk-slide-in-left {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes hk-scale-in {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes hk-blur-in {
+  from { opacity: 0; filter: blur(12px); }
+  to { opacity: 1; filter: blur(0); }
+}
+
+@keyframes hk-rotate-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes hk-bounce-gentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes hk-pulse-ring {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+@keyframes hk-confetti-fall {
+  0% { transform: translateY(-100%) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+@keyframes hk-envelope-open {
+  0% { transform: rotateX(0deg); }
+  100% { transform: rotateX(-180deg); }
+}
+
+@keyframes hk-letter-rise {
+  0% { transform: translateY(50%) scale(0.8); opacity: 0; }
+  100% { transform: translateY(-10%) scale(1); opacity: 1; }
+}
+
+@keyframes hk-rain-drop {
+  0% { transform: translateY(-10px); opacity: 0; }
+  10% { opacity: 0.6; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+
+@keyframes hk-sunrise {
+  0% { transform: translateY(100%) scale(0.5); opacity: 0; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+@keyframes hk-typewriter {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes hk-gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
 @layer utilities {
+  /* ── Gradients ── */
   .bg-brand-gradient {
     @apply bg-gradient-to-r from-pink-500 to-purple-500;
   }
-  
+
+  .bg-brand-gradient-subtle {
+    @apply bg-gradient-to-r from-pink-500/10 to-purple-500/10;
+  }
+
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-purple-500;
   }
-  
-  .glass-card {
-    @apply bg-white/60 backdrop-blur-md border border-white/20 shadow-lg;
+
+  .text-gradient-gold {
+    background: linear-gradient(135deg, hsl(43, 96%, 56%), hsl(35, 100%, 70%), hsl(43, 96%, 56%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
+  .bg-page {
+    background: linear-gradient(180deg, 
+      hsl(340, 20%, 98%) 0%, 
+      hsl(340, 25%, 96%) 50%, 
+      hsl(280, 15%, 97%) 100%
+    );
+  }
+
+  /* ── Glass Effects ── */
+  .glass-card {
+    @apply bg-white/60 backdrop-blur-xl border border-white/30 shadow-lg;
+    box-shadow: var(--hk-shadow-card);
+  }
+
+  .glass-card-hover {
+    @apply glass-card transition-all duration-500;
+  }
+  .glass-card-hover:hover {
+    @apply bg-white/70 shadow-xl;
+    box-shadow: var(--hk-shadow-elevated);
+    transform: translateY(-2px);
+  }
+
+  .glass-navbar {
+    @apply bg-white/70 backdrop-blur-2xl border-b border-pink-100/40;
+    box-shadow: 0 1px 20px rgba(236, 72, 153, 0.04);
+  }
+
+  .glass-navbar-scrolled {
+    @apply bg-white/85 backdrop-blur-3xl;
+    box-shadow: 0 4px 30px rgba(236, 72, 153, 0.08);
+  }
+
+  .glass-modal {
+    @apply bg-white/80 backdrop-blur-3xl border border-white/40;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.12);
+  }
+
+  .glass-input {
+    @apply bg-white/50 backdrop-blur-md border border-pink-100/40 rounded-2xl;
+    transition: all 0.3s var(--hk-ease-premium);
+  }
+  .glass-input:focus {
+    @apply bg-white/70 border-pink-200/60 ring-2 ring-pink-400/20;
+  }
+
+  /* ── Glow Effects ── */
+  .glow-pink {
+    box-shadow: 0 0 20px var(--hk-glow-pink);
+  }
+
+  .glow-pink-lg {
+    box-shadow: 0 0 40px var(--hk-glow-pink), 0 0 80px rgba(236, 72, 153, 0.15);
+  }
+
+  .glow-purple {
+    box-shadow: 0 0 20px var(--hk-glow-purple);
+  }
+
+  .glow-gold {
+    box-shadow: 0 0 20px var(--hk-glow-gold);
+  }
+
+  .glow-button {
+    box-shadow: 0 4px 20px rgba(236, 72, 153, 0.25), 0 0 0 1px rgba(236, 72, 153, 0.1);
+  }
+  .glow-button:hover {
+    box-shadow: 0 8px 32px rgba(236, 72, 153, 0.35), 0 0 0 1px rgba(236, 72, 153, 0.15);
+  }
+
+  /* ── Shimmer Text ── */
+  .shimmer-text {
+    background: linear-gradient(
+      110deg,
+      hsl(340, 82%, 65%) 0%,
+      hsl(280, 60%, 70%) 30%,
+      hsl(43, 96%, 65%) 50%,
+      hsl(280, 60%, 70%) 70%,
+      hsl(340, 82%, 65%) 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: hk-shimmer 4s linear infinite;
+  }
+
+  /* ── Gold Accents ── */
+  .gold-accent {
+    color: hsl(43, 96%, 56%);
+  }
+
+  .gold-border {
+    border-color: hsl(43, 96%, 56% / 0.3);
+  }
+
+  .gold-glow {
+    box-shadow: 0 0 20px hsl(43, 96%, 56% / 0.2);
+  }
+
+  /* ── Luxury Shadows ── */
+  .shadow-luxury {
+    box-shadow: var(--hk-shadow-soft);
+  }
+
+  .shadow-luxury-md {
+    box-shadow: var(--hk-shadow-card);
+  }
+
+  .shadow-luxury-lg {
+    box-shadow: var(--hk-shadow-elevated);
+  }
+
+  /* ── Animations ── */
+  .animate-float {
+    animation: hk-float 6s ease-in-out infinite;
+  }
+
+  .animate-float-slow {
+    animation: hk-float-slow 8s ease-in-out infinite;
+  }
+
+  .animate-glow-pulse {
+    animation: hk-glow-pulse 3s ease-in-out infinite;
+  }
+
+  .animate-shimmer {
+    animation: hk-shimmer 3s linear infinite;
+  }
+
+  .animate-sparkle {
+    animation: hk-sparkle 2s ease-in-out infinite;
+  }
+
+  .animate-heartbeat {
+    animation: hk-heartbeat 1.5s ease-in-out infinite;
+  }
+
+  .animate-fade-in-up {
+    animation: hk-fade-in-up 0.7s var(--hk-ease-premium) forwards;
+  }
+
+  .animate-fade-in-down {
+    animation: hk-fade-in-down 0.7s var(--hk-ease-premium) forwards;
+  }
+
+  .animate-scale-in {
+    animation: hk-scale-in 0.5s var(--hk-ease-premium) forwards;
+  }
+
+  .animate-blur-in {
+    animation: hk-blur-in 0.8s var(--hk-ease-premium) forwards;
+  }
+
+  .animate-bounce-gentle {
+    animation: hk-bounce-gentle 2s ease-in-out infinite;
+  }
+
+  .animate-gradient-shift {
+    background-size: 200% 200%;
+    animation: hk-gradient-shift 6s ease infinite;
+  }
+
+  .animate-rotate-slow {
+    animation: hk-rotate-slow 20s linear infinite;
+  }
+
+  /* ── Stagger Animation Delays ── */
+  .delay-100 { animation-delay: 100ms; }
+  .delay-200 { animation-delay: 200ms; }
+  .delay-300 { animation-delay: 300ms; }
+  .delay-400 { animation-delay: 400ms; }
+  .delay-500 { animation-delay: 500ms; }
+  .delay-600 { animation-delay: 600ms; }
+  .delay-700 { animation-delay: 700ms; }
+  .delay-800 { animation-delay: 800ms; }
+
+  /* ── Mobile-First Touch Targets ── */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .touch-target-lg {
+    min-height: 48px;
+    min-width: 48px;
+  }
+
+  /* ── Premium Section Spacing (Mobile-First) ── */
+  .section-padding {
+    @apply px-5 py-16 sm:px-8 sm:py-20 md:py-24 lg:px-12 lg:py-28;
+  }
+
+  .section-padding-lg {
+    @apply px-5 py-20 sm:px-8 sm:py-28 md:py-32 lg:px-12 lg:py-40;
+  }
+
+  /* ── Safe Area Padding ── */
   .pb-safe {
     padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  /* ── Background Patterns ── */
+  .bg-dots {
+    background-image: radial-gradient(circle, hsl(340, 82%, 65%, 0.06) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .bg-grid {
+    background-image: 
+      linear-gradient(hsl(340, 15%, 90%, 0.3) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(340, 15%, 90%, 0.3) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* ── Interactive States ── */
+  .press-effect {
+    @apply transition-transform duration-150;
+  }
+  .press-effect:active {
+    transform: scale(0.96);
+  }
+
+  .hover-lift {
+    @apply transition-all duration-500;
+  }
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--hk-shadow-elevated);
+  }
+
+  /* ── Text Utilities ── */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  /* ── Container ── */
+  .container-narrow {
+    @apply max-w-3xl mx-auto;
+  }
+
+  .container-wide {
+    @apply max-w-7xl mx-auto;
+  }
+
+  /* ── Line Clamp ── */
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/* ============================================
+   COMPONENT-LEVEL STYLES
+   ============================================ */
+
+@layer components {
+  /* Premium Card - Used across templates and dashboard */
+  .hk-card {
+    @apply bg-white/60 backdrop-blur-xl rounded-3xl border border-pink-100/30 overflow-hidden;
+    box-shadow: var(--hk-shadow-card);
+    transition: all 0.5s var(--hk-ease-premium);
+  }
+
+  .hk-card:hover {
+    @apply bg-white/70;
+    box-shadow: var(--hk-shadow-elevated);
+    transform: translateY(-3px);
+  }
+
+  /* Premium Badge */
+  .hk-badge {
+    @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide;
+    @apply bg-pink-50/80 text-pink-600 border border-pink-100/50 backdrop-blur-md;
+  }
+
+  .hk-badge-gold {
+    @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide;
+    background: linear-gradient(135deg, hsl(43, 96%, 90%), hsl(35, 100%, 85%));
+    color: hsl(35, 80%, 30%);
+    border: 1px solid hsl(43, 96%, 56% / 0.3);
+  }
+
+  /* Section Headings */
+  .hk-section-title {
+    @apply text-3xl sm:text-4xl md:text-5xl font-bold font-playfair tracking-tight text-slate-900;
+  }
+
+  .hk-section-subtitle {
+    @apply text-base sm:text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed mt-4;
+  }
+
+  /* Premium Divider */
+  .hk-divider {
+    @apply flex items-center gap-4 my-8;
+  }
+  .hk-divider::before,
+  .hk-divider::after {
+    content: '';
+    @apply flex-1 h-px bg-gradient-to-r from-transparent via-pink-200/50 to-transparent;
   }
 }

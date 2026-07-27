@@ -57,23 +57,23 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://hamarikahani.in";
 
   return (
-    <div className="p-4 sm:p-8 lg:p-12 max-w-7xl mx-auto space-y-10">
+    <div className="p-5 sm:p-8 lg:p-12 max-w-7xl mx-auto space-y-8 sm:space-y-10">
       
       {/* Welcome & Analytics Header */}
       <div className="mb-8">
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 font-playfair tracking-tight text-slate-800">
-          Hi, <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-purple-600">{userName.split(' ')[0]}</span> 👋
+        <h1 className="text-2xl sm:text-3xl lg:text-5xl font-bold mb-2 sm:mb-3 font-playfair tracking-tight text-slate-800">
+          Hi, <span className="text-gradient">{userName.split(' ')[0]}</span> 👋
         </h1>
-        <p className="text-slate-500 mb-10 text-lg">Manage your beautiful surprises and create new memories.</p>
+        <p className="text-slate-500 mb-8 sm:mb-10 text-sm sm:text-lg">Manage your beautiful surprises and create new memories.</p>
         
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-          <div className="bg-white/60 backdrop-blur-xl border border-pink-100/30 p-5 sm:p-6 rounded-[2rem] shadow-[0_8px_30px_rgba(0,0,0,0.04)] relative overflow-hidden">
+          <div className="glass-card rounded-[1.5rem] sm:rounded-[2rem] p-4 sm:p-6 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-24 h-24 bg-pink-50 rounded-full blur-xl -mr-10 -mt-10" />
             <p className="text-[10px] sm:text-xs text-slate-400 font-bold mb-2 uppercase tracking-widest relative z-10">Total Creations</p>
             <p className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-800 relative z-10">{totalStoriesCount}</p>
           </div>
           
-          <div className="bg-gradient-to-br from-pink-500 to-purple-500 p-5 sm:p-6 rounded-[2rem] shadow-[0_8px_30px_rgba(236,72,153,0.2)] relative overflow-hidden text-white">
+          <div className="bg-gradient-to-br from-pink-500 to-purple-500 p-4 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] shadow-luxury-lg relative overflow-hidden text-white">
             <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10" />
             <p className="text-[10px] sm:text-xs text-pink-100 font-bold mb-2 uppercase tracking-widest relative z-10">Active Pages</p>
             <div className="flex items-end gap-2 sm:gap-3 relative z-10">
@@ -82,7 +82,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             </div>
           </div>
           
-          <div className="hidden md:block bg-white/60 backdrop-blur-xl border border-pink-100/30 p-6 rounded-[2rem] shadow-[0_8px_30px_rgba(0,0,0,0.04)] relative overflow-hidden">
+          <div className="hidden md:block glass-card rounded-[2rem] p-6 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-24 h-24 bg-purple-50 rounded-full blur-xl -mr-10 -mt-10" />
             <p className="text-xs text-slate-400 font-bold mb-2 uppercase tracking-widest relative z-10">Drafts</p>
             <div className="flex items-end gap-3 relative z-10">
@@ -96,21 +96,21 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       {/* Stories List */}
       <div>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
-          <h2 className="text-2xl sm:text-3xl font-bold font-playfair text-slate-800">My Creations</h2>
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-playfair text-slate-800">My Creations</h2>
           
-          <Button className="rounded-full shadow-lg shadow-pink-500/20 bg-gradient-to-r from-pink-500 to-purple-500 hover:scale-[0.97] transition-transform px-6 h-12 text-md w-full sm:w-auto text-white border-0" asChild>
+          <Button className="rounded-full glow-button bg-gradient-to-r from-pink-500 to-purple-500 active:scale-[0.97] transition-all px-6 h-12 sm:h-12 text-sm sm:text-base w-full sm:w-auto text-white border-0 touch-target" asChild>
             <Link href="/">✨ Create New Surprise</Link>
           </Button>
         </div>
         
         {userStories.length === 0 ? (
-          <div className="text-center py-20 sm:py-28 bg-white/60 backdrop-blur-xl border border-pink-100/30 rounded-[3rem] shadow-[0_8px_30px_rgba(0,0,0,0.03)] flex flex-col items-center justify-center px-4">
+          <div className="text-center py-16 sm:py-24 glass-card rounded-[2rem] sm:rounded-[3rem] flex flex-col items-center justify-center px-5 sm:px-8">
             <div className="w-20 h-20 bg-gradient-to-br from-pink-100 to-purple-100 rounded-full flex items-center justify-center mb-6 shadow-inner">
               <Heart className="w-8 h-8 text-pink-500" />
             </div>
-            <h3 className="text-2xl sm:text-3xl font-playfair font-bold mb-3 text-slate-800">❤️ You haven't created any surprise yet.</h3>
-            <p className="text-slate-500 mb-8 max-w-sm leading-relaxed text-sm">Create your first emotional surprise for someone special. It only takes a few minutes.</p>
-            <Button asChild className="rounded-full shadow-xl shadow-pink-500/20 bg-gradient-to-r from-pink-500 to-purple-500 hover:scale-[0.97] transition-transform px-8 h-14 text-lg text-white border-0">
+            <h3 className="text-xl sm:text-2xl md:text-3xl font-playfair font-bold mb-3 text-slate-800">❤️ You haven&apos;t created any surprise yet.</h3>
+            <p className="text-slate-500 mb-6 sm:mb-8 max-w-sm leading-relaxed text-sm">Create your first emotional surprise for someone special. It only takes a few minutes.</p>
+            <Button asChild className="rounded-full glow-button bg-gradient-to-r from-pink-500 to-purple-500 active:scale-[0.97] transition-all px-8 h-14 text-base sm:text-lg text-white border-0 w-full sm:w-auto touch-target">
               <Link href="/">✨ Create Surprise</Link>
             </Button>
           </div>
@@ -126,7 +126,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                 const coverImage = templateData.coverImage;
                 
                 return (
-                  <div key={story.id} className="group bg-white/60 backdrop-blur-xl rounded-[2rem] shadow-[0_8px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(236,72,153,0.1)] hover:-translate-y-1 transition-all duration-300 flex flex-col h-full overflow-hidden border border-pink-100/30">
+                  <div key={story.id} className="group hk-card flex flex-col h-full">
                     
                     {/* Cover Image */}
                     <div className="relative h-48 sm:h-56 w-full bg-slate-100 overflow-hidden">
