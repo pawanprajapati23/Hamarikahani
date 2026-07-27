@@ -12,8 +12,9 @@ const getStory = cache(async (slug: string) => {
   return story;
 });
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const story = await getStory(params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const resolvedParams = await params;
+  const story = await getStory(resolvedParams.slug);
   if (!story || story.status !== "PUBLISHED") return { title: "Story Not Found" };
   
   const content = story.content as StoryContent;
@@ -28,10 +29,11 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function PublicStoryPage({ params }: { params: { slug: string } }) {
+export default async function PublicStoryPage({ params }: { params: Promise<{ slug: string }> }) {
+  const resolvedParams = await params;
   // Query the story from Postgres matching the highly-optimized uniqueSlug index
   // Deduplicated via React cache()
-  const story = await getStory(params.slug);
+  const story = await getStory(resolvedParams.slug);
   
   if (!story || story.status !== "PUBLISHED") {
     return notFound();
@@ -52,7 +54,7 @@ export default async function PublicStoryPage({ params }: { params: { slug: stri
         title={content.title || ""}
         blocks={content.blocks || []}
         themeId={story.themeId} 
-        slug={params.slug}
+        slug={resolvedParams.slug}
       />
     </main>
   );
