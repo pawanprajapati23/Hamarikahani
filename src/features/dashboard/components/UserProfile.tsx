@@ -41,8 +41,8 @@ export function UserProfile({ initialName, email }: UserProfileProps) {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center border-2 border-primary/20 shadow-inner">
-        <User className="w-8 h-8 text-primary" />
+      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-pink-400 to-purple-400 flex items-center justify-center shadow-inner">
+        <User className="w-8 h-8 text-white" />
       </div>
       
       <div className="space-y-1 w-full relative">
@@ -51,23 +51,23 @@ export function UserProfile({ initialName, email }: UserProfileProps) {
             <Input 
               value={name} 
               onChange={(e) => setName(e.target.value)} 
-              className="h-8 text-sm font-semibold"
+              className="h-8 text-sm font-semibold rounded-full"
               autoFocus
               disabled={isSaving}
               onKeyDown={(e) => e.key === "Enter" && handleSave()}
             />
-            <Button size="icon" variant="ghost" className="h-8 w-8 text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50" onClick={handleSave} disabled={isSaving}>
+            <Button size="icon" variant="ghost" className="h-8 w-8 text-pink-500 hover:text-pink-600 hover:bg-pink-50 rounded-full" onClick={handleSave} disabled={isSaving}>
               {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
             </Button>
-            <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground" onClick={() => { setIsEditing(false); setName(initialName); }} disabled={isSaving}>
+            <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground rounded-full" onClick={() => { setIsEditing(false); setName(initialName); }} disabled={isSaving}>
               <X className="w-4 h-4" />
             </Button>
           </div>
         ) : (
           <div className="flex items-center justify-between group">
             <h2 className="text-xl font-bold text-foreground truncate pr-2 font-playfair">{name}</h2>
-            <Button size="icon" variant="ghost" className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => setIsEditing(true)}>
-              <Edit2 className="w-3 h-3 text-muted-foreground" />
+            <Button size="icon" variant="ghost" className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity rounded-full text-pink-500 hover:bg-pink-50" onClick={() => setIsEditing(true)}>
+              <Edit2 className="w-3 h-3" />
             </Button>
           </div>
         )}

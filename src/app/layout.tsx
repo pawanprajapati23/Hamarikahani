@@ -43,7 +43,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${playfair.variable}`}>
-      <body className="min-h-screen bg-background font-sans antialiased relative">
+      <body className="min-h-screen bg-[hsl(340,20%,98%)] font-sans antialiased relative">
+        <div className="fixed top-[-20%] left-[-10%] w-[60%] h-[60%] bg-pink-200/20 blur-[150px] rounded-full pointer-events-none z-0" />
+        <div className="fixed bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-purple-200/15 blur-[150px] rounded-full pointer-events-none z-0" />
         <FloatingHearts />
         <div className="relative z-10">
           <AppProvider>{children}</AppProvider>
