@@ -13,7 +13,6 @@ export function Header() {
           <Link href="/jobs" className="text-gray-600 hover:text-orange-600 font-medium transition-colors">Browse Jobs</Link>
           <Link href="/jobs/noida" className="text-gray-600 hover:text-orange-600 font-medium transition-colors">Noida</Link>
           <Link href="/jobs/gurugram" className="text-gray-600 hover:text-orange-600 font-medium transition-colors">Gurugram</Link>
-          <Link href="/admin" className="text-gray-600 hover:text-orange-600 font-medium transition-colors">Admin</Link>
         </nav>
         <div className="md:hidden">
           {/* Mobile menu button could go here */}
