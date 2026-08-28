@@ -1,9 +1,5 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/firebaseAdmin';
-import { GoogleGenAI } from '@google/genai';
-
-// Initialize Gemini
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export async function GET(request: Request) {
   try {
@@ -34,12 +30,8 @@ export async function GET(request: Request) {
     console.log(`Deleted ${deletedCount} expired jobs.`);
 
     // ==========================================
-    // TASK 2: FETCH NEW DATA & AI PROCESSING
+    // TASK 2: FETCH NEW DATA & AI PROCESSING (Using NVIDIA API)
     // ==========================================
-    // TODO: Replace this dummy text with your actual internet fetch logic
-    // const response = await fetch('https://some-job-board.com/api/jobs');
-    // const rawJobsText = await response.text(); 
-    
     // Temporary dummy text to test the system
     const rawJobsText = `
       Hiring a React Developer at TechCorp Noida. Requires 2 years experience. 
@@ -55,14 +47,44 @@ export async function GET(request: Request) {
       Raw Data: ${rawJobsText}
     `;
 
-    const aiResponse = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
+    const invoke_url = "https://integrate.api.nvidia.com/v1/chat/completions";
+    
+    const payload = {
+      model: "moonshotai/kimi-k3",
+      messages: [
+        {
+          role: "user",
+          content: prompt
+        }
+      ],
+      max_tokens: 16384,
+      temperature: 0.1, // Adjusted to 0.1 for more deterministic JSON output
+      stream: false,    // Set to false to easily parse JSON in backend
+      reasoning_effort: "max"
+    };
+
+    const aiResponse = await fetch(invoke_url, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${process.env.NVIDIA_API_KEY}`,
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
     });
+
+    if (!aiResponse.ok) {
+        const errorText = await aiResponse.text();
+        console.error("NVIDIA API Fetch Error:", errorText);
+        throw new Error("Failed to fetch data from NVIDIA API");
+    }
+
+    const aiData = await aiResponse.json();
+    const text = aiData.choices?.[0]?.message?.content || "";
 
     let jobsData: any[] = [];
     try {
-      const text = aiResponse.text();
+      // Clean up markdown block if present
       const jsonMatch = text.match(/\[.*\]/s);
       if (jsonMatch) {
           jobsData = JSON.parse(jsonMatch[0]);
@@ -70,7 +92,7 @@ export async function GET(request: Request) {
           jobsData = JSON.parse(text.replace(/```json/g, '').replace(/```/g, ''));
       }
     } catch (e) {
-      console.error("AI output JSON parse error", e);
+      console.error("AI output JSON parse error:", e);
     }
 
     // ==========================================
