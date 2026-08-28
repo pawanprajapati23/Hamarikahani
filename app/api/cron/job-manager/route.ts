@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/firebaseAdmin';
+import * as cheerio from 'cheerio';
+
+export const maxDuration = 60; // Prevent Vercel timeout (up to 60s for Hobby)
 
 export async function GET(request: Request) {
   try {
@@ -30,16 +33,37 @@ export async function GET(request: Request) {
     console.log(`Deleted ${deletedCount} expired jobs.`);
 
     // ==========================================
-    // TASK 2: FETCH NEW DATA & AI PROCESSING (Using NVIDIA API)
+    // TASK 2: FETCH REAL DATA FROM INTERNET
     // ==========================================
-    // Temporary dummy text to test the system
-    const rawJobsText = `
-      Hiring a React Developer at TechCorp Noida. Requires 2 years experience. 
-      Apply before 2026-12-31. Salary is 10LPA. Link: https://techcorp.com/jobs/react-dev
-    `;
+    const targetUrls = [
+      'https://www.ycombinator.com/jobs', // example source
+      // 'https://startup.jobs/', // example source
+    ];
+    
+    let rawJobsText = "";
+    
+    for (const url of targetUrls) {
+      try {
+        const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
+        if (!res.ok) continue;
+        const html = await res.text();
+        const $ = cheerio.load(html);
+        $('script, style, noscript, iframe, img, svg, nav, footer').remove();
+        
+        // Extract visible text and trim to ~10,000 characters to fit in LLM context
+        const text = $('body').text().replace(/\s+/g, ' ').trim().substring(0, 10000);
+        rawJobsText += `\n\n--- Source: ${url} ---\n${text}`;
+      } catch (err) {
+        console.error(`Failed to fetch ${url}`, err);
+      }
+    }
+
+    if (!rawJobsText.trim()) {
+      return NextResponse.json({ success: true, message: "No data fetched." });
+    }
 
     const prompt = `
-      Extract job postings from the following text and return a JSON array. 
+      Extract job postings from the following scraped text and return a JSON array. 
       Format exactly like this: 
       [{ "title": "...", "company": "...", "location": "...", "description": "...", "expiresAt": "YYYY-MM-DD", "sourceUrl": "..." }]
       If no expiry date is found, set 'expiresAt' to 30 days from today.
