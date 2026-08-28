@@ -95,6 +95,15 @@ export async function GET(request: Request) {
       console.error("AI output JSON parse error:", e);
     }
 
+    // Helper function for SEO slugs
+    const generateSlug = (title: string, company: string, location: string) => {
+      const base = `${title} ${company} ${location}`
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+      return `${base}-${Math.floor(Math.random() * 10000)}`; // add random number to ensure uniqueness
+    };
+
     // ==========================================
     // TASK 3: PUBLISH TO FIRESTORE (AVOID DUPLICATES)
     // ==========================================
@@ -103,19 +112,20 @@ export async function GET(request: Request) {
     for (const job of jobsData) {
       const jobUrl = job.sourceUrl || `https://hamarikahani.in/auto/${Date.now()}`;
       
-      // Generating a safe Document ID from the URL (base64 encoded) to avoid slashes in ID
-      const docId = Buffer.from(jobUrl).toString('base64').replace(/[/+=]/g, '');
-      const jobDoc = jobsRef.doc(docId);
+      // Check for exact URL duplicate first
+      const existing = await jobsRef.where('sourceUrl', '==', jobUrl).limit(1).get();
       
-      const docSnap = await jobDoc.get();
-      // Only insert if it doesn't already exist
-      if (!docSnap.exists) {
+      if (existing.empty) {
+        const slug = generateSlug(job.title || 'job', job.company || 'company', job.location || 'india');
+        const jobDoc = jobsRef.doc(slug); // Using SEO friendly slug as Document ID
+        
         await jobDoc.set({
           title: job.title || '',
           company: job.company || '',
           location: job.location || '',
           description: job.description || '',
           sourceUrl: jobUrl,
+          slug: slug,
           expiresAt: job.expiresAt ? new Date(job.expiresAt) : new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000), // Default 30 days
           createdAt: new Date(),
         });

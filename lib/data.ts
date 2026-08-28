@@ -1,128 +1,140 @@
-export const mockJobs = [
-  {
-    id: "job-1",
-    slug: "frontend-developer-react-noida",
-    title: "Frontend Developer (React/Next.js)",
-    companyName: "TechSphere Solutions",
-    location: "Noida",
-    category: "it",
-    experienceText: "2-4 Years",
-    salaryText: "₹6,00,000 - ₹12,00,000",
-    description: "We are looking for a skilled React Developer with Next.js experience. You will be building user interfaces for a modern SaaS platform. Required skills: React, TypeScript, Tailwind CSS.",
-    skills: ["React", "Next.js", "TypeScript", "Tailwind CSS"],
-    postedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 1), // 1 day ago
-    status: "ACTIVE"
-  },
-  {
-    id: "job-2",
-    slug: "customer-support-executive-gurugram",
-    title: "Customer Support Executive (Voice Process)",
-    companyName: "Global BPO Services",
-    location: "Gurugram",
-    category: "bpo",
-    experienceText: "0-1 Years (Freshers Welcome)",
-    salaryText: "₹2,50,000 - ₹3,50,000",
-    description: "Hiring for an international voice process. Excellent English communication skills are required. Night shifts involved. Cab facility provided.",
-    skills: ["Communication", "English", "Customer Service", "BPO"],
-    postedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2), // 2 days ago
-    status: "ACTIVE"
-  },
-  {
-    id: "job-3",
-    slug: "marketing-intern-greater-noida",
-    title: "Digital Marketing Intern",
-    companyName: "Creative Edge Agency",
-    location: "Greater Noida",
-    category: "internship",
-    experienceText: "Fresher",
-    salaryText: "₹10,000 / month (Stipend)",
-    description: "Looking for a highly motivated digital marketing intern. You will learn and work on SEO, Social Media Management, and Google Ads.",
-    skills: ["SEO", "Social Media", "Marketing", "Content Writing"],
-    postedAt: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
-    status: "ACTIVE"
-  },
-  {
-    id: "job-4",
-    slug: "backend-node-developer-gurugram",
-    title: "Backend Developer (Node.js)",
-    companyName: "FinTech Innovations",
-    location: "Gurugram",
-    category: "it",
-    experienceText: "3-5 Years",
-    salaryText: "₹12,00,000 - ₹18,00,000",
-    description: "Join our core platform team to build scalable microservices. Must have strong experience in Node.js, Express, and PostgreSQL.",
-    skills: ["Node.js", "Express", "PostgreSQL", "Microservices"],
-    postedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3),
-    status: "ACTIVE"
-  },
-  {
-    id: "job-5",
-    slug: "sales-executive-noida",
-    title: "Field Sales Executive",
-    companyName: "RetailCorp India",
-    location: "Noida",
-    category: "sales",
-    experienceText: "1-3 Years",
-    salaryText: "₹3,00,000 - ₹5,00,000 + Incentives",
-    description: "Responsible for B2B sales in the Noida region. Must have a two-wheeler and local market knowledge.",
-    skills: ["Sales", "B2B", "Communication", "Negotiation"],
-    postedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5),
-    status: "ACTIVE"
-  },
-  {
-    id: "job-6",
-    slug: "data-entry-operator-greater-noida",
-    title: "Data Entry Operator",
-    companyName: "FastTrack Logistics",
-    location: "Greater Noida",
-    category: "fresher",
-    experienceText: "0-2 Years",
-    salaryText: "₹15,000 - ₹20,000 / month",
-    description: "Looking for candidates with good typing speed (minimum 40 WPM) and basic knowledge of MS Excel.",
-    skills: ["Data Entry", "MS Excel", "Typing"],
-    postedAt: new Date(Date.now() - 1000 * 60 * 60 * 12),
-    status: "ACTIVE"
-  }
-];
+import { db } from './firebaseAdmin';
+
+// Note: Ensure functions only run in Server Components or Server Actions
 
 export async function getRecentJobs(limit = 6) {
-  return mockJobs
-    .filter(job => job.status === "ACTIVE")
-    .sort((a, b) => b.postedAt.getTime() - a.postedAt.getTime())
-    .slice(0, limit);
+  try {
+    const today = new Date();
+    const snapshot = await db.collection('jobs')
+      .where('expiresAt', '>=', today)
+      .get();
+      
+    if (snapshot.empty) return [];
+    
+    return snapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        slug: data.slug || doc.id,
+        title: data.title || 'Job Opening',
+        companyName: data.company || 'Unknown Company',
+        location: data.location || 'India',
+        description: data.description || '',
+        createdAt: data.createdAt?.toDate(),
+        expiresAt: data.expiresAt?.toDate(),
+        postedAt: data.createdAt?.toDate(),
+        status: 'ACTIVE',
+        // Optional mapped fields if missing
+        skills: data.skills || [],
+        experienceText: data.experience || '',
+        salaryText: data.salary || '',
+      };
+    }).sort((a: any, b: any) => (b.postedAt?.getTime() || 0) - (a.postedAt?.getTime() || 0)).slice(0, limit);
+  } catch (error) {
+    console.error("Error fetching recent jobs:", error);
+    return [];
+  }
 }
 
 export async function searchJobs(q: string, location: string, category: string) {
-  let filtered = mockJobs.filter(job => job.status === "ACTIVE");
-  
-  if (q) {
-    const query = q.toLowerCase();
-    filtered = filtered.filter(job => 
-      job.title.toLowerCase().includes(query) || 
-      job.companyName.toLowerCase().includes(query) ||
-      job.skills.some(skill => skill.toLowerCase().includes(query))
-    );
+  try {
+    const today = new Date();
+    let queryRef: any = db.collection('jobs').where('expiresAt', '>=', today);
+
+    // Note: Firestore doesn't support full-text search directly without an extension (like Algolia).
+    // For a simple implementation, we will fetch all active jobs and filter them in memory.
+    // If the database grows large, you should implement Algolia or Typesense.
+    const snapshot = await queryRef.get();
+    
+    let jobs = snapshot.docs.map((doc: any) => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        slug: data.slug || doc.id,
+        title: data.title || 'Job Opening',
+        companyName: data.company || 'Unknown Company',
+        location: data.location || 'India',
+        description: data.description || '',
+        createdAt: data.createdAt?.toDate(),
+        expiresAt: data.expiresAt?.toDate(),
+        postedAt: data.createdAt?.toDate(),
+        status: 'ACTIVE',
+        category: data.category || '',
+        skills: data.skills || [],
+      };
+    });
+
+    if (q) {
+      const lowerQ = q.toLowerCase();
+      jobs = jobs.filter((job: any) => 
+        job.title.toLowerCase().includes(lowerQ) || 
+        job.companyName.toLowerCase().includes(lowerQ) || 
+        job.description.toLowerCase().includes(lowerQ)
+      );
+    }
+
+    if (location) {
+      const lowerLoc = location.toLowerCase().replace(" ", "-");
+      jobs = jobs.filter((job: any) => job.location.toLowerCase().replace(" ", "-").includes(lowerLoc));
+    }
+
+    if (category) {
+      const catFormatted = category.toLowerCase().replace(" jobs", "");
+      jobs = jobs.filter((job: any) => (job.category || '').toLowerCase() === catFormatted);
+    }
+
+    return jobs.sort((a: any, b: any) => (b.postedAt?.getTime() || 0) - (a.postedAt?.getTime() || 0));
+  } catch (error) {
+    console.error("Error searching jobs:", error);
+    return [];
   }
-  
-  if (location) {
-    filtered = filtered.filter(job => job.location.toLowerCase().replace(" ", "-") === location.toLowerCase());
-  }
-  
-  if (category) {
-    // For 'it' category map to 'it jobs' etc.
-    const catFormatted = category.toLowerCase().replace(" jobs", "");
-    filtered = filtered.filter(job => job.category === catFormatted);
-  }
-  
-  return filtered.sort((a, b) => b.postedAt.getTime() - a.postedAt.getTime());
 }
 
 export async function getJobsByLocation(location: string) {
-  return mockJobs
-    .filter(job => job.status === "ACTIVE" && job.location.toLowerCase().replace(" ", "-") === location.toLowerCase())
-    .sort((a, b) => b.postedAt.getTime() - a.postedAt.getTime());
+  return await searchJobs("", location, "");
 }
 
 export async function getJobBySlug(slug: string) {
-  return mockJobs.find(job => job.slug === slug);
+  try {
+    // 1. Try to fetch by document ID if slug is the docId
+    let docRef = db.collection('jobs').doc(slug);
+    let docSnap = await docRef.get();
+
+    if (!docSnap.exists) {
+      // 2. Try fetching by slug field
+      const snapshot = await db.collection('jobs').where('slug', '==', slug).limit(1).get();
+      if (snapshot.empty) return null;
+      docSnap = snapshot.docs[0];
+    }
+
+    const data = docSnap.data() as any;
+    return {
+      id: docSnap.id,
+      slug: data.slug || docSnap.id,
+      title: data.title || 'Job Opening',
+      companyName: data.company || 'Unknown Company',
+      location: data.location || 'India',
+      description: data.description || '',
+      createdAt: data.createdAt?.toDate(),
+      expiresAt: data.expiresAt?.toDate(),
+      postedAt: data.createdAt?.toDate(),
+      sourceUrl: data.sourceUrl || '',
+      sourceName: data.sourceName || 'HamaraKahani Jobs',
+      applyUrl: data.applyUrl || data.sourceUrl || '#',
+      status: 'ACTIVE',
+      skills: data.skills || [],
+      experienceText: data.experience || '',
+      salaryText: data.salary || '',
+      employmentType: data.employmentType || 'FULL_TIME',
+      city: data.city || data.location,
+      state: data.state || '',
+      country: data.country || 'IN',
+      salaryMin: data.salaryMin || null,
+      salaryMax: data.salaryMax || null,
+      isRemote: data.isRemote || false,
+    };
+  } catch (error) {
+    console.error("Error fetching job by slug:", error);
+    return null;
+  }
 }
