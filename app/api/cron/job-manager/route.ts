@@ -73,6 +73,7 @@ export async function GET(request: Request) {
       Extract up to 5 job postings from the following scraped text and return a JSON array. 
       Format exactly like this: 
       [{ "title": "...", "company": "...", "location": "...", "description": "...", "expiresAt": "YYYY-MM-DD", "sourceUrl": "..." }]
+      Today's date is ${new Date().toISOString().split('T')[0]}.
       If no expiry date is found, set 'expiresAt' to 30 days from today.
       
       Raw Data: ${rawJobsText}
@@ -155,6 +156,11 @@ export async function GET(request: Request) {
         const slug = generateSlug(job.title || 'job', job.company || 'company', job.location || 'india');
         const jobDoc = jobsRef.doc(slug); // Using SEO friendly slug as Document ID
         
+        let expiresAt = job.expiresAt ? new Date(job.expiresAt) : new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
+        if (expiresAt.getTime() < today.getTime()) {
+           expiresAt = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
+        }
+
         await jobDoc.set({
           title: job.title || '',
           company: job.company || '',
@@ -162,7 +168,7 @@ export async function GET(request: Request) {
           description: job.description || '',
           sourceUrl: jobUrl,
           slug: slug,
-          expiresAt: job.expiresAt ? new Date(job.expiresAt) : new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000), // Default 30 days
+          expiresAt: expiresAt,
           createdAt: new Date(),
         });
         addedCount++;
