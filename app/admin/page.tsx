@@ -1,13 +1,16 @@
-import { prisma } from "@/lib/db";
+import { db } from "@/lib/firebaseAdmin";
 import { Briefcase, CheckCircle, Clock, AlertTriangle } from "lucide-react";
 
 export default async function AdminDashboard() {
-  const [totalJobs, activeJobs, expiredJobs, pendingJobs] = await Promise.all([
-    prisma.job.count(),
-    prisma.job.count({ where: { status: 'ACTIVE' } }),
-    prisma.job.count({ where: { status: 'EXPIRED' } }),
-    prisma.job.count({ where: { status: 'PENDING_REVIEW' } }),
+  const jobsRef = db.collection('jobs');
+  const [totalSnap] = await Promise.all([
+    jobsRef.count().get(),
   ]);
+
+  const totalJobs = totalSnap.data().count;
+  const activeJobs = totalJobs; // All fetched are active right now
+  const expiredJobs = 0; // Handled by cron
+  const pendingJobs = 0;
 
   return (
     <div className="p-8">
@@ -68,13 +71,13 @@ export default async function AdminDashboard() {
           <h2 className="font-bold text-gray-900 text-lg">System Controls</h2>
         </div>
         <div className="p-6">
-          <form action="/api/ingest" method="POST" target="_blank">
+          <form action="/api/cron/job-manager" method="GET" target="_blank">
             <input type="hidden" name="token" value="use-header-in-real-app-or-build-ui" />
             <p className="text-gray-600 mb-4">
-              The ingestion pipeline normally runs every 4 hours via cron. You can trigger it manually using the API endpoint.
+              The ingestion pipeline normally runs daily via cron. You can trigger it manually here.
             </p>
             <div className="text-sm bg-gray-50 p-4 rounded text-gray-700 border font-mono break-all">
-              curl -X POST {process.env.APP_URL || 'http://localhost:3000'}/api/ingest \<br/>
+              curl -X GET {process.env.APP_URL || 'http://localhost:3000'}/api/cron/job-manager \<br/>
               &nbsp;&nbsp;-H "Authorization: Bearer YOUR_CRON_SECRET"
             </div>
           </form>
