@@ -6,7 +6,7 @@ export function Header() {
     <header className="border-b bg-white border-orange-200">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="font-bold text-2xl flex items-center gap-2 text-blue-700">
-          <img src="/favicon.svg" alt="Logo" className="w-8 h-8 object-contain rounded" />
+          <Image src="/logo.png" alt="HamaraKahani Logo" width={32} height={32} className="object-contain rounded" />
           HamaraKahani <span className="text-orange-600">Jobs</span>
         </Link>
         <nav className="hidden md:flex space-x-6">

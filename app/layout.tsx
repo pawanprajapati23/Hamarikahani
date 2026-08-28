@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   },
   description: 'Find top jobs in Noida, Greater Noida, and Gurugram. We discover and aggregate the best IT, BPO, fresher, and local jobs from trusted sources.',
   icons: {
-    icon: '/favicon.svg',
+    icon: '/icon.png',
   },
   openGraph: {
     title: 'HamaraKahani Jobs',
