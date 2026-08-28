@@ -32,17 +32,18 @@ export function Footer() {
           </ul>
         </div>
         <div>
-          <h4 className="font-semibold mb-4 text-gray-200">Legal</h4>
+          <h4 className="font-semibold mb-4 text-gray-200">Company</h4>
           <ul className="space-y-2 text-sm text-gray-400">
-            <li><Link href="/privacy-policy" className="hover:text-orange-400 transition-colors">Privacy Policy</Link></li>
-            <li><Link href="/terms" className="hover:text-orange-400 transition-colors">Terms of Use</Link></li>
-            <li><Link href="/disclaimer" className="hover:text-orange-400 transition-colors">Disclaimer</Link></li>
-            <li><Link href="/contact" className="hover:text-orange-400 transition-colors">Contact Us</Link></li>
+            <li><Link href="/about" className="hover:text-blue-400 transition-colors">About Us</Link></li>
+            <li><Link href="/contact" className="hover:text-blue-400 transition-colors">Contact Us</Link></li>
+            <li><Link href="/privacy-policy" className="hover:text-blue-400 transition-colors">Privacy Policy</Link></li>
+            <li><Link href="/terms" className="hover:text-blue-400 transition-colors">Terms of Use</Link></li>
           </ul>
         </div>
       </div>
-      <div className="container mx-auto px-4 mt-8 pt-8 border-t border-slate-700 text-center text-sm text-gray-500">
-        &copy; {new Date().getFullYear()} HamaraKahani.in. All rights reserved.
+      <div className="container mx-auto px-4 mt-12 pt-8 border-t border-slate-700 flex flex-col md:flex-row items-center justify-between text-sm text-gray-500">
+        <p>&copy; {new Date().getFullYear()} HamaraKahani.in. All rights reserved.</p>
+        <p className="mt-2 md:mt-0">Founded by <span className="text-gray-300 font-semibold">Pawan Prajapati</span></p>
       </div>
     </footer>
   );
