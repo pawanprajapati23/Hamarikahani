@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { Search, MapPin, Briefcase } from 'lucide-react';
 import { getRecentJobs } from '@/lib/data';
 
+export const revalidate = 60; // Revalidate the page every 60 seconds
+
 export default async function HomePage() {
   const recentJobs = await getRecentJobs();
 

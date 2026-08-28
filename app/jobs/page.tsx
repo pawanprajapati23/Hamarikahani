@@ -7,6 +7,8 @@ export const metadata = {
   description: 'Browse the latest jobs in Noida, Greater Noida, and Gurugram.',
 };
 
+export const revalidate = 60; // Revalidate the page every 60 seconds
+
 export default async function JobsPage({
   searchParams,
 }: {

@@ -4,6 +4,8 @@ import { MapPin, Briefcase, Building, Clock, ExternalLink, ShieldCheck, Calendar
 import Link from 'next/link';
 import { Metadata } from 'next';
 
+export const revalidate = 60; // Revalidate the page every 60 seconds
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   let job: any = null;
