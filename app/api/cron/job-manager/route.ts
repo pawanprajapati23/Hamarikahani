@@ -36,22 +36,29 @@ export async function GET(request: Request) {
     // TASK 2: FETCH REAL DATA FROM INTERNET
     // ==========================================
     const targetUrls = [
-      'https://www.ycombinator.com/jobs', // example source
-      // 'https://startup.jobs/', // example source
+      'https://www.ycombinator.com/jobs', 
     ];
     
     let rawJobsText = "";
     
     for (const url of targetUrls) {
       try {
-        const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second fetch timeout
+
+        const res = await fetch(url, { 
+          headers: { 'User-Agent': 'Mozilla/5.0' },
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        
         if (!res.ok) continue;
         const html = await res.text();
         const $ = cheerio.load(html);
         $('script, style, noscript, iframe, img, svg, nav, footer').remove();
         
-        // Extract visible text and trim to ~10,000 characters to fit in LLM context
-        const text = $('body').text().replace(/\s+/g, ' ').trim().substring(0, 10000);
+        // Extract visible text and trim to ~4,000 characters to ensure fast LLM processing
+        const text = $('body').text().replace(/\s+/g, ' ').trim().substring(0, 4000);
         rawJobsText += `\n\n--- Source: ${url} ---\n${text}`;
       } catch (err) {
         console.error(`Failed to fetch ${url}`, err);
@@ -63,7 +70,7 @@ export async function GET(request: Request) {
     }
 
     const prompt = `
-      Extract job postings from the following scraped text and return a JSON array. 
+      Extract up to 5 job postings from the following scraped text and return a JSON array. 
       Format exactly like this: 
       [{ "title": "...", "company": "...", "location": "...", "description": "...", "expiresAt": "YYYY-MM-DD", "sourceUrl": "..." }]
       If no expiry date is found, set 'expiresAt' to 30 days from today.
@@ -81,11 +88,14 @@ export async function GET(request: Request) {
           content: prompt
         }
       ],
-      max_tokens: 16384,
-      temperature: 0.1, // Adjusted to 0.1 for more deterministic JSON output
-      stream: false,    // Set to false to easily parse JSON in backend
-      reasoning_effort: "max"
+      max_tokens: 2048, // Reduced to ensure faster generation
+      temperature: 0.1, 
+      stream: false,
+      reasoning_effort: "low" // Crucial fix: "max" reasoning takes 60s+ and causes 504 on serverless
     };
+
+    const aiController = new AbortController();
+    const aiTimeoutId = setTimeout(() => aiController.abort(), 40000); // 40 second AI timeout
 
     const aiResponse = await fetch(invoke_url, {
       method: "POST",
@@ -94,8 +104,10 @@ export async function GET(request: Request) {
         "Accept": "application/json",
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
+      signal: aiController.signal
     });
+    clearTimeout(aiTimeoutId);
 
     if (!aiResponse.ok) {
         const errorText = await aiResponse.text();
